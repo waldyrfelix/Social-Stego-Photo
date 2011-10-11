@@ -4,55 +4,73 @@ namespace DCTAlgorithms
 {
     public class Stego
     {
-        internal double[,] calculateDCTForBlock(byte[,] originalBlock)
-        {
-            double[,] dctBlock = new double[8,8];
+        private readonly int _blockSize;
 
-            for (int u = 0; u < originalBlock.GetLength(0); u++)
+        public Stego(int blockSize)
+        {
+            _blockSize = blockSize;
+        }
+
+        internal int[,] calculateDCTForBlock(int[,] originalBlock)
+        {
+            int [,] dctBlock = new int[_blockSize, _blockSize];
+            int n = originalBlock.GetLength(1);
+
+            for (int k = 0; k < n; k++)
             {
-                for (int v = 0; v < originalBlock.GetLength(1); v++)
+                for (int l = 0; l < n; l++)
                 {
-                    dctBlock[u, v] = calculateDCTForPixel(originalBlock, u, v);
+                    double sum = 0;
+                    for (int i = 0; i < n; i++)
+                    {
+                        for (int j = 0; j < n; j++)
+                        {
+                            sum += coefficient(k) * coefficient(l) * originalBlock[i, j] * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                        }
+                    }
+
+                    dctBlock[k, l] = (int) Math.Round(sum);
                 }
             }
 
             return dctBlock;
         }
 
-        internal double calculateCosine(int stegoCoord, int coord)
+        internal int[,] calculateIDCTForBlock(int[,] originalBlock)
         {
-            return Math.Cos((2*coord + 1)*stegoCoord*Math.PI/16.0);
-        }
+            int[,] idctBlock = new int[_blockSize, _blockSize];
+            int n = originalBlock.GetLength(1);
 
-        internal double calculateIteration(byte[,] originalBlock, int x, int y, int u, int v)
-        {
-            return originalBlock[x, y]*calculateCosine(u, x)*calculateCosine(v, y);
-        }
-
-        internal double calculateSum(byte[,] originalBlock, int u, int v)
-        {
-            double sum = 0;
-            for (int x = 0; x < originalBlock.GetLength(0); x++)
+            for (int i = 0; i < n; i++)
             {
-                for (int y = 0; y < originalBlock.GetLength(1); y++)
+                for (int j = 0; j < n; j++)
                 {
-                    sum += calculateIteration(originalBlock, x, y, u, v);
+                    double sum = 0;
+                    for (int k = 0; k < n; k++)
+                    {
+                        for (int l = 0; l < n; l++)
+                        {
+                            sum += coefficient(k) * coefficient(l) * originalBlock[k, l] * calculateCosine( k, i) * calculateCosine(l, j) / 4;
+                        }
+                    }
+
+                    idctBlock[i, j] = (int) Math.Round(sum);
                 }
             }
 
-            return sum;
+            return idctBlock;
         }
 
-        internal double calculateDCTForPixel(byte[,] originalBlock, int u, int v)
+        internal double calculateCosine(double k, int i)
         {
-            return calculateWeight(u)*calculateWeight(v)/4*calculateSum(originalBlock, u, v);
+            return Math.Cos(Math.PI / 16 * k * (2 * i + 1));
         }
 
-        internal double calculateWeight(int coord)
+        internal double coefficient(int coord)
         {
             if (coord == 0)
             {
-                return 1/Math.Sqrt(2);
+                return 1 / Math.Sqrt(2);
             }
             return 1;
         }

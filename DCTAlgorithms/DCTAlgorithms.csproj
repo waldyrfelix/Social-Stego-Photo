@@ -52,9 +52,9 @@
     <Compile Include="StegoTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ShangHai.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="teste1.jpg" />
+    <Content Include="teste2.jpg" />
+    <Content Include="teste3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
