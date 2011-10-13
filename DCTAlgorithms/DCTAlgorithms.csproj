@@ -47,8 +47,10 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageBinaryReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Stego.cs" />
+    <Compile Include="DiscreteCosineTransform.cs" />
+    <Compile Include="Steganography.cs" />
     <Compile Include="StegoTest.cs" />
   </ItemGroup>
   <ItemGroup>
