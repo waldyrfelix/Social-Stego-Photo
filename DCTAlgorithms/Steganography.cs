@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace DCTAlgorithms
@@ -10,15 +8,15 @@ namespace DCTAlgorithms
     {
         public string ExtractMessage(int[,] dctMatrix)
         {
-            BitArray bitArray = new BitArray(6*8);
+            BitArray bitArray = new BitArray(6 * 8);
             int index = 0;
             for (int i = 0; i < dctMatrix.GetLength(0); i++)
             {
                 for (int j = 0; j < dctMatrix.GetLength(1) && index < bitArray.Length; j++)
                 {
-                    if (dctMatrix[i, j] != 0 )
+                    if (dctMatrix[i, j] != 0)
                     {
-                        bitArray.Set(index, Convert.ToBoolean(dctMatrix[i,j] % 2));
+                        bitArray.Set(index, Convert.ToBoolean(dctMatrix[i, j] % 2));
                         index++;
                     }
                 }
@@ -47,7 +45,14 @@ namespace DCTAlgorithms
                         int bit = Convert.ToInt32(enumerator.Current);
                         if (matrix[i, j] % 2 != bit)
                         {
-                            matrix[i, j]++;
+                            if (matrix[i, j] % 2 == 1)
+                            {
+                                matrix[i, j]--;
+                            }
+                            else
+                            {
+                                matrix[i, j]++;
+                            }
                         }
                     }
                 }
