@@ -25,6 +25,7 @@ namespace DCTAlgorithms
                         for (int j = 0; j < blockData.Height; j++)
                         {
                             superBlock[i, j] = (byte)Math.Round((pointer[0] + pointer[1] + pointer[2]) / 3.0);
+                            //superBlock[i, j] = pointer[0];
                             pointer += 3;
                         }
                         pointer += blockData.Stride - (blockData.Width * 3);

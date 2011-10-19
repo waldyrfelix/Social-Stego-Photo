@@ -47,6 +47,11 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FinalTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestHelper.cs" />
+    <Compile Include="DCTTest.cs" />
     <Compile Include="ImageBinaryReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DiscreteCosineTransform.cs" />
@@ -57,6 +62,7 @@
     <Content Include="teste1.jpg" />
     <Content Include="teste2.jpg" />
     <Content Include="teste3.jpg" />
+    <Content Include="teste4.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

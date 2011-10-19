@@ -9,12 +9,12 @@ namespace DCTAlgorithms
     {
         const int BlockSize = 8;
 
-        public int[,] CalculateDCT(byte[,] binaryImage)
+        public double[,] CalculateDCT(byte[,] binaryImage)
         {
             int width = binaryImage.GetLength(0);
             int height = binaryImage.GetLength(1);
             
-            var dctSuperBlock = new int[width, height];
+            var dctSuperBlock = new double[width, height];
             for (int x = 0; x < width; x = x + BlockSize)
             {
                 for (int y = 0; y < height; y = y + BlockSize)
@@ -32,7 +32,7 @@ namespace DCTAlgorithms
             }
             return dctSuperBlock;
         }
-        public byte[,] CalculateIDCT(int[,] dctMatrix)
+        public byte[,] CalculateIDCT(double [,] dctMatrix)
         {
             int width = dctMatrix.GetLength(0);
             int height = dctMatrix.GetLength(1);
@@ -69,9 +69,9 @@ namespace DCTAlgorithms
             return subBlock;
         }
 
-        private int[,] readSubBlock(int[,] binaryImage, int x, int y)
+        private double [,] readSubBlock(double [,] binaryImage, int x, int y)
         {
-            int[,] subBlock = new int[BlockSize, BlockSize];
+            var subBlock = new double[BlockSize, BlockSize];
             for (int i = 0; i < BlockSize; i++)
             {
                 for (int j = 0; j < BlockSize; j++)
@@ -82,9 +82,9 @@ namespace DCTAlgorithms
             return subBlock;
         }
 
-        private int[,] calculateDCTForBlock(byte[,] originalBlock)
+        private double [,] calculateDCTForBlock(byte[,] originalBlock)
         {
-            int[,] dctBlock = new int[BlockSize, BlockSize];
+            var dctBlock = new double[BlockSize, BlockSize];
             for (int k = 0; k < BlockSize; k++)
             {
                 for (int l = 0; l < BlockSize; l++)
@@ -98,16 +98,16 @@ namespace DCTAlgorithms
                         }
                     }
 
-                    dctBlock[k, l] = (int)Math.Round(sum);
+                    dctBlock[k, l] = Math.Round(sum, 2);
                 }
             }
 
             return dctBlock;
         }
 
-        private byte[,] calculateIDCTForBlock(int[,] dctBlock)
+        private byte[,] calculateIDCTForBlock(double [,] dctBlock)
         {
-            byte[,] idctBlock = new byte[BlockSize, BlockSize];
+            var idctBlock = new byte[BlockSize, BlockSize];
             int n = dctBlock.GetLength(1);
 
             for (int i = 0; i < n; i++)

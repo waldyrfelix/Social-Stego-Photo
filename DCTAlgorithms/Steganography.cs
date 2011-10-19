@@ -1,62 +1,131 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace DCTAlgorithms
 {
     public class Steganography
     {
-        public string ExtractMessage(int[,] dctMatrix)
+
+        //public List<Point> Permutation(int[,] matrix, int count)
+        //{
+        //    int width = matrix.GetLength(0);
+        //    int height = matrix.GetLength(1);
+
+        //    var points = new List<Point>();
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        var point = new Point(random.Next(width), random.Next(height));
+        //        if (points.Contains(point) || matrix[point.X, point.Y] == 0)
+        //        {
+        //            i--;
+        //        }
+        //        else
+        //        {
+        //            points.Add(point);
+        //        }
+        //    }
+        //    return points;
+        //}
+
+        //public List<Point> Permutation(double[,] matrix, int count)
+        //{
+        //    int xy = 0;
+        //    var points = new List<Point>();
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        points.Add(new Point(xy, xy));
+        //        xy += 8;
+        //    }
+        //    return points;
+        //}
+
+        //public List<Point> Permutation(double[,] matrix, int count)
+        //{
+        //    int width = matrix.GetLength(0);
+        //    int height = matrix.GetLength(1);
+        //    var random = new Random(615718);
+
+        //    var points = new List<Point>();
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        var point = new Point(random.Next(width), random.Next(height));
+        //        if (points.Contains(point) || matrix[point.X, point.Y] == 0 || Math.Abs(matrix[point.X, point.Y]) == 1.0)
+        //        {
+        //            i--;
+        //        }
+        //        else
+        //        {
+        //            points.Add(point);
+        //        }
+        //    }
+        //    return points;
+        //} 
+
+        public List<Point> Permutation(double[,] matrix, int count)
         {
-            BitArray bitArray = new BitArray(6 * 8);
-            int index = 0;
-            for (int i = 0; i < dctMatrix.GetLength(0); i++)
+            var points = new List<Point>();
+
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
-                for (int j = 0; j < dctMatrix.GetLength(1) && index < bitArray.Length; j++)
+                for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    if (dctMatrix[i, j] != 0)
+                    if (matrix[i, j] != 0 && Math.Abs(matrix[i, j]) != 1)
                     {
-                        bitArray.Set(index, Convert.ToBoolean(dctMatrix[i, j] % 2));
-                        index++;
+                        points.Add(new Point(i, j));
                     }
                 }
             }
+            return points;
+        }
 
-            byte[] bytes = new byte[bitArray.Length / 8];
+        private int bitsPerNonZeroDCTCoefficient(double[,] matrix)
+        {
+            int count = 0;
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    if (matrix[i, j] != 0 && Math.Abs(matrix[i, j]) != 1)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        public string ExtractMessage(double[,] matrix)
+        {
+            var path = Permutation(matrix, 0);
+            var bitArray = new BitArray((int)Math.Ceiling(path.Count / 8.0) * 8);
+
+            for (int i = 0; i < path.Count; i++)
+            {
+                bitArray.Set(i, ((int)matrix[path[i].X, path[i].Y]) % 2 == 1);
+            }
+
+            var bytes = new byte[bitArray.Length / 8];
             bitArray.CopyTo(bytes, 0);
 
             return Encoding.ASCII.GetString(bytes);
         }
 
-        public int[,] HideMessage(int[,] matrix, string message)
+        public double[,] HideMessage(double[,] matrix, string message)
         {
             byte[] messageBytes = Encoding.ASCII.GetBytes(message);
             var bitArray = new BitArray(messageBytes);
+            var path = Permutation(matrix, bitArray.Length);
 
             IEnumerator enumerator = bitArray.GetEnumerator();
-            for (int i = 0; i < matrix.GetLength(0); i++)
+            for (int i = 0; i < path.Count && enumerator.MoveNext(); i++)
             {
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    if (matrix[i, j] > 10)
-                    {
-                        if (!enumerator.MoveNext()) break;
-
-                        int bit = Convert.ToInt32(enumerator.Current);
-                        if (matrix[i, j] % 2 != bit)
-                        {
-                            if (matrix[i, j] % 2 == 1)
-                            {
-                                matrix[i, j]--;
-                            }
-                            else
-                            {
-                                matrix[i, j]++;
-                            }
-                        }
-                    }
-                }
+                matrix[path[i].X, path[i].Y] = Math.Round(matrix[path[i].X, path[i].Y] + Convert.ToInt32(enumerator.Current) - (int)matrix[path[i].X, path[i].Y] % 2, 2);
             }
+
             return matrix;
         }
     }
