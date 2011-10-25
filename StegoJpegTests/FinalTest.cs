@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections;
 using StegoJpeg;
 
-namespace DCTAlgorithms
+namespace StegoJpegTests
 {
     [TestClass]
     public class FinalTest
@@ -53,7 +49,7 @@ namespace DCTAlgorithms
                 TestHelper.PrintMatrix("Binary image", bytes);
                 writeBlock("original.jpg", bytes);
 
-                var dct = new DiscreteCosineTransform();
+                var dct = new DCT();
                 double[,] matrix = dct.CalculateDCT(bytes);
 
                 TestHelper.PrintMatrix("DCT matrix", matrix);
@@ -77,7 +73,7 @@ namespace DCTAlgorithms
                 var bytes = reader.ReadLuminanceFromImage(stream.BaseStream);
                 TestHelper.PrintMatrix("Stego img", bytes);
 
-                var dct = new DiscreteCosineTransform();
+                var dct = new DCT();
                 double[,] matrix = dct.CalculateDCT(bytes);
                 TestHelper.PrintMatrix("DCT", matrix);
 
@@ -99,7 +95,7 @@ namespace DCTAlgorithms
 
                 writeBlock("original.jpg", bytes);
 
-                var dct = new DiscreteCosineTransform();
+                var dct = new DCT();
                 double[,] matrix = dct.CalculateDCT(bytes);
 
                 double[,] matrixPlus = modifyMostSignificantBits(matrix, 31);

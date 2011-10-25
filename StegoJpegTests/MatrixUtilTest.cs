@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StegoJpeg;
 
-namespace DCTAlgorithms
+namespace StegoJpegTests
 {
     [TestClass]
     public class MatrixUtilTest

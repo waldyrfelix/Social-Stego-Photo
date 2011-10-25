@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StegoJpeg;
 
-namespace DCTAlgorithms
+namespace StegoJpegTests
 {
     [TestClass]
     public class StegoTest
     {
-        private double [,] matrix = new double[,]
+        private double[,] matrix = new double[,]
                                        {
                                            {144, 145, 142, 146, 148, 150, 146, 146},
                                            {132, 130, 130, 126, 128, 147, 126, 126},

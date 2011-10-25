@@ -2,7 +2,7 @@
 
 namespace StegoJpeg
 {
-    public class DiscreteCosineTransform
+    public class DCT
     {
         const int BlockSize = 8;
 

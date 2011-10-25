@@ -1,4 +1,4 @@
-﻿namespace StegoJpeg
+﻿namespace StegoJpeg.Util
 {
     public struct RGB
     {

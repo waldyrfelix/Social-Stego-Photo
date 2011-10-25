@@ -42,14 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiscreteCosineTransform.cs" />
+    <Compile Include="DCT.cs" />
     <Compile Include="ImageBinaryReader.cs" />
-    <Compile Include="MatrixUtil.cs" />
+    <Compile Include="Util\MatrixUtil.cs" />
     <Compile Include="Quantizer.cs" />
     <Compile Include="Steganography.cs" />
-    <Compile Include="YCrCb.cs" />
+    <Compile Include="Util\YCrCb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RGB.cs" />
+    <Compile Include="Util\RGB.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

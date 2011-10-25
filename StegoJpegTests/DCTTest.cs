@@ -1,11 +1,7 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StegoJpeg;
 
-namespace DCTAlgorithms
+namespace StegoJpegTests
 {
     [TestClass]
     public class DCTTest
@@ -25,7 +21,7 @@ namespace DCTAlgorithms
                                      {255, 0, 255, 0, 255, 0, 255, 0}
                                  };
 
-            var calcDct = new DiscreteCosineTransform();
+            var calcDct = new DCT();
 
             var dct = calcDct.CalculateDCT(matrix);
             var idct = calcDct.CalculateIDCT(dct);
@@ -52,7 +48,7 @@ namespace DCTAlgorithms
                                      {255, 0, 255, 0, 255, 0, 205, 0}
                                  };
 
-            var calcDct = new DiscreteCosineTransform();
+            var calcDct = new DCT();
 
             var dct = calcDct.CalculateDCT(matrix);
             var idct = calcDct.CalculateIDCT(dct);
@@ -79,7 +75,7 @@ namespace DCTAlgorithms
                                      {109, 100, 199, 15, 255, 14, 205, 0}
                                  };
 
-            var calcDct = new DiscreteCosineTransform();
+            var calcDct = new DCT();
 
             var dct = calcDct.CalculateDCT(matrix);
             var idct = calcDct.CalculateIDCT(dct);
@@ -106,7 +102,7 @@ namespace DCTAlgorithms
                                      {61, 55, 56, 62, 77, 92, 101, 99}
                                  };
 
-            var calcDct = new DiscreteCosineTransform();
+            var calcDct = new DCT();
 
             var dct = calcDct.CalculateDCT(matrix);
             var idct = calcDct.CalculateIDCT(dct);
@@ -133,7 +129,7 @@ namespace DCTAlgorithms
                                      {0, 0, 0, 0, 0, 0, 0, 0}
                                  };
 
-            var calcDct = new DiscreteCosineTransform();
+            var calcDct = new DCT();
 
             var dct = calcDct.CalculateDCT(matrix);
             var idct = calcDct.CalculateIDCT(dct);
@@ -160,7 +156,7 @@ namespace DCTAlgorithms
                                      {1, 0, 255, 254, 253, 8, 255, 0}
                                  };
 
-            var calcDct = new DiscreteCosineTransform();
+            var calcDct = new DCT();
 
             var dct = calcDct.CalculateDCT(matrix);
             dct[0, 0] = 1000;
