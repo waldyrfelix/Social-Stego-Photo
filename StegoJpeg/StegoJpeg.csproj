@@ -3,17 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CAF3ABAF-53D2-4710-ACA3-7EB895291C0C}</ProjectGuid>
+    <ProjectGuid>{2B7CEAE6-D2F8-4F27-8B8B-CFEFB18D727D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DCTAlgorithms</RootNamespace>
-    <AssemblyName>DCTAlgorithms</AssemblyName>
+    <RootNamespace>StegoJpeg</RootNamespace>
+    <AssemblyName>StegoJpeg</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,41 +32,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
-      <Visible>False</Visible>
-    </CodeAnalysisDependentAssemblyPaths>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="FinalTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TestHelper.cs" />
-    <Compile Include="DCTTest.cs" />
+    <Compile Include="DiscreteCosineTransform.cs" />
+    <Compile Include="ImageBinaryReader.cs" />
+    <Compile Include="MatrixUtil.cs" />
+    <Compile Include="Quantizer.cs" />
+    <Compile Include="Steganography.cs" />
+    <Compile Include="YCrCb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StegoTest.cs" />
-    <Compile Include="MatrixUtilTest.cs" />
+    <Compile Include="RGB.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="teste1.jpg" />
-    <Content Include="teste2.jpg" />
-    <Content Include="teste3.jpg" />
-    <Content Include="teste4.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\StegoJpeg\StegoJpeg.csproj">
-      <Project>{2B7CEAE6-D2F8-4F27-8B8B-CFEFB18D727D}</Project>
-      <Name>StegoJpeg</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

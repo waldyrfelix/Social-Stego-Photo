@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace DCTAlgorithms
+namespace StegoJpeg
 {
     public class Steganography
     {

@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
+using StegoJpeg;
 
 namespace DCTAlgorithms
 {
