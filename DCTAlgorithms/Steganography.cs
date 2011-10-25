@@ -65,7 +65,7 @@ namespace DCTAlgorithms
         //    return points;
         //} 
 
-        public List<Point> Permutation(double[,] matrix, int count)
+        public List<Point> Permutation(double[,] matrix)
         {
             var points = new List<Point>();
 
@@ -100,7 +100,7 @@ namespace DCTAlgorithms
 
         public string ExtractMessage(double[,] matrix)
         {
-            var path = Permutation(matrix, 0);
+            var path = Permutation(matrix);
             var bitArray = new BitArray((int)Math.Ceiling(path.Count / 8.0) * 8);
 
             for (int i = 0; i < path.Count; i++)
@@ -111,22 +111,28 @@ namespace DCTAlgorithms
             var bytes = new byte[bitArray.Length / 8];
             bitArray.CopyTo(bytes, 0);
 
-            return Encoding.ASCII.GetString(bytes);
+            return Encoding.ASCII.GetString(bytes).Split('\0')[0];
         }
 
         public double[,] HideMessage(double[,] matrix, string message)
         {
-            byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+            byte[] messageBytes = Encoding.ASCII.GetBytes(message + '\0');
             var bitArray = new BitArray(messageBytes);
-            var path = Permutation(matrix, bitArray.Length);
+            var path = Permutation(matrix);
+            int i;
 
             IEnumerator enumerator = bitArray.GetEnumerator();
-            for (int i = 0; i < path.Count && enumerator.MoveNext(); i++)
+            for (i = 0; i < path.Count && enumerator.MoveNext(); i++)
             {
-                matrix[path[i].X, path[i].Y] = Math.Round(matrix[path[i].X, path[i].Y] + Convert.ToInt32(enumerator.Current) - (int)matrix[path[i].X, path[i].Y] % 2, 2);
+                matrix[path[i].X, path[i].Y] = calculateLSB(matrix[path[i].X, path[i].Y], Convert.ToInt32(enumerator.Current));
             }
 
             return matrix;
+        }
+
+        private double calculateLSB(double original, int dado)
+        {
+            return Math.Round(original + dado - (int)original % 2, 2);
         }
     }
 }

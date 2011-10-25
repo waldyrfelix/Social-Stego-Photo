@@ -47,7 +47,7 @@ namespace DCTAlgorithms
             using (var stream = new StreamReader(path))
             {
                 var reader = new ImageBinaryReader();
-                var bytes = reader.ReadAllBytes(stream.BaseStream);
+                var bytes = reader.ReadLuminanceFromImage(stream.BaseStream);
 
                 TestHelper.PrintMatrix("Binary image", bytes);
                 writeBlock("original.jpg", bytes);
@@ -73,7 +73,7 @@ namespace DCTAlgorithms
             using (var stream = new StreamReader(path))
             {
                 var reader = new ImageBinaryReader();
-                var bytes = reader.ReadAllBytes(stream.BaseStream);
+                var bytes = reader.ReadLuminanceFromImage(stream.BaseStream);
                 TestHelper.PrintMatrix("Stego img", bytes);
 
                 var dct = new DiscreteCosineTransform();
@@ -94,7 +94,7 @@ namespace DCTAlgorithms
             using (var stream = new StreamReader(path))
             {
                 var reader = new ImageBinaryReader();
-                var bytes = reader.ReadAllBytes(stream.BaseStream);
+                var bytes = reader.ReadLuminanceFromImage(stream.BaseStream);
 
                 writeBlock("original.jpg", bytes);
 

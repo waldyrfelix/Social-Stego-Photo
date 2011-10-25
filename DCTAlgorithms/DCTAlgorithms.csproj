@@ -50,6 +50,8 @@
     <Compile Include="FinalTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="matrixutil.cs" />
+    <Compile Include="Quantizer.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="DCTTest.cs" />
     <Compile Include="ImageBinaryReader.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="DiscreteCosineTransform.cs" />
     <Compile Include="Steganography.cs" />
     <Compile Include="StegoTest.cs" />
+    <Compile Include="MatrixUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="teste1.jpg" />
