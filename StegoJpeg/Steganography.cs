@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using StegoJpeg.Util;
 
 namespace StegoJpeg
 {
@@ -64,7 +65,7 @@ namespace StegoJpeg
         //    return points;
         //} 
 
-        public List<Point> Permutation(double[,] matrix)
+        public List<Point> Permutation(YCrCb[,] matrix)
         {
             var points = new List<Point>();
 
@@ -72,7 +73,7 @@ namespace StegoJpeg
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    if (matrix[i, j] != 0 && Math.Abs(matrix[i, j]) != 1)
+                    if (matrix[i, j].Y != 0 && Math.Abs(matrix[i, j].Y) != 1)
                     {
                         points.Add(new Point(i, j));
                     }
@@ -97,14 +98,14 @@ namespace StegoJpeg
             return count;
         }
 
-        public string ExtractMessage(double[,] matrix)
+        public string ExtractMessage(YCrCb[,] matrix)
         {
             var path = Permutation(matrix);
             var bitArray = new BitArray((int)Math.Ceiling(path.Count / 8.0) * 8);
 
             for (int i = 0; i < path.Count; i++)
             {
-                bitArray.Set(i, ((int)matrix[path[i].X, path[i].Y]) % 2 == 1);
+                bitArray.Set(i, ((int)matrix[path[i].X, path[i].Y].Y) % 2 == 1);
             }
 
             var bytes = new byte[bitArray.Length / 8];
@@ -113,7 +114,7 @@ namespace StegoJpeg
             return Encoding.ASCII.GetString(bytes).Split('\0')[0];
         }
 
-        public double[,] HideMessage(double[,] matrix, string message)
+        public YCrCb[,] HideMessage(YCrCb[,] matrix, string message)
         {
             byte[] messageBytes = Encoding.ASCII.GetBytes(message + '\0');
             var bitArray = new BitArray(messageBytes);
@@ -123,7 +124,7 @@ namespace StegoJpeg
             IEnumerator enumerator = bitArray.GetEnumerator();
             for (i = 0; i < path.Count && enumerator.MoveNext(); i++)
             {
-                matrix[path[i].X, path[i].Y] = calculateLSB(matrix[path[i].X, path[i].Y], Convert.ToInt32(enumerator.Current));
+                matrix[path[i].X, path[i].Y].Y = calculateLSB(matrix[path[i].X, path[i].Y].Y, Convert.ToInt32(enumerator.Current));
             }
 
             return matrix;

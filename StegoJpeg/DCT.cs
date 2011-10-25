@@ -1,4 +1,5 @@
 ﻿using System;
+using StegoJpeg.Util;
 
 namespace StegoJpeg
 {
@@ -6,12 +7,12 @@ namespace StegoJpeg
     {
         const int BlockSize = 8;
 
-        public double[,] CalculateDCT(byte[,] binaryImage)
+        public YCrCb[,] CalculateDCT(YCrCb[,] binaryImage)
         {
             int width = binaryImage.GetLength(0);
             int height = binaryImage.GetLength(1);
-            
-            var dctSuperBlock = new double[width, height];
+
+            var dctSuperBlock = new YCrCb[width, height];
             for (int x = 0; x < width; x = x + BlockSize)
             {
                 for (int y = 0; y < height; y = y + BlockSize)
@@ -29,12 +30,12 @@ namespace StegoJpeg
             }
             return dctSuperBlock;
         }
-        public byte[,] CalculateIDCT(double [,] dctMatrix)
+        public YCrCb[,] CalculateIDCT(YCrCb[,] dctMatrix)
         {
             int width = dctMatrix.GetLength(0);
             int height = dctMatrix.GetLength(1);
-            
-            var idctSuperBlock = new byte[width, height];
+
+            var idctSuperBlock = new YCrCb[width, height];
             for (int x = 0; x < width; x = x + BlockSize)
             {
                 for (int y = 0; y < height; y = y + BlockSize)
@@ -66,9 +67,9 @@ namespace StegoJpeg
             return subBlock;
         }
 
-        private double [,] readSubBlock(double [,] binaryImage, int x, int y)
+        private YCrCb[,] readSubBlock(YCrCb[,] binaryImage, int x, int y)
         {
-            var subBlock = new double[BlockSize, BlockSize];
+            var subBlock = new YCrCb[BlockSize, BlockSize];
             for (int i = 0; i < BlockSize; i++)
             {
                 for (int j = 0; j < BlockSize; j++)
@@ -79,48 +80,58 @@ namespace StegoJpeg
             return subBlock;
         }
 
-        private double [,] calculateDCTForBlock(byte[,] originalBlock)
+        private YCrCb[,] calculateDCTForBlock(YCrCb[,] originalBlock)
         {
-            var dctBlock = new double[BlockSize, BlockSize];
+            var dctBlock = new YCrCb[BlockSize, BlockSize];
             for (int k = 0; k < BlockSize; k++)
             {
                 for (int l = 0; l < BlockSize; l++)
                 {
-                    double sum = 0;
+                    double sumY, sumCr, sumCb;
+                    sumY = sumCr = sumCb = 0;
                     for (int i = 0; i < BlockSize; i++)
                     {
                         for (int j = 0; j < BlockSize; j++)
                         {
-                            sum += coefficient(k) * coefficient(l) * originalBlock[i, j] * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                            sumY += coefficient(k) * coefficient(l) * originalBlock[i, j].Y * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                            sumCr += coefficient(k) * coefficient(l) * originalBlock[i, j].Cr * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                            sumCb += coefficient(k) * coefficient(l) * originalBlock[i, j].Cb * calculateCosine(k, i) * calculateCosine(l, j) / 4;
                         }
                     }
 
-                    dctBlock[k, l] = Math.Round(sum, 2);
+                    dctBlock[k, l].Y = Math.Round(sumY, 2);
+                    dctBlock[k, l].Cr = Math.Round(sumCr, 2);
+                    dctBlock[k, l].Cb = Math.Round(sumCb, 2);
                 }
             }
 
             return dctBlock;
         }
 
-        private byte[,] calculateIDCTForBlock(double [,] dctBlock)
+        private YCrCb[,] calculateIDCTForBlock(YCrCb[,] dctBlock)
         {
-            var idctBlock = new byte[BlockSize, BlockSize];
+            var idctBlock = new YCrCb[BlockSize, BlockSize];
             int n = dctBlock.GetLength(1);
 
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < n; j++)
                 {
-                    double sum = 0;
+                    double sumY, sumCr, sumCb;
+                    sumY = sumCr = sumCb = 0;
                     for (int k = 0; k < n; k++)
                     {
                         for (int l = 0; l < n; l++)
                         {
-                            sum += coefficient(k) * coefficient(l) * dctBlock[k, l] * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                            sumY += coefficient(k) * coefficient(l) * dctBlock[k, l].Y * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                            sumCr += coefficient(k) * coefficient(l) * dctBlock[k, l].Cr * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                            sumCb += coefficient(k) * coefficient(l) * dctBlock[k, l].Cb * calculateCosine(k, i) * calculateCosine(l, j) / 4;
                         }
                     }
 
-                    idctBlock[i, j] = (byte)Math.Round(sum);
+                    idctBlock[i, j].Y = Math.Round(sumY);
+                    idctBlock[i, j].Cr = Math.Round(sumCr);
+                    idctBlock[i, j].Cb = Math.Round(sumCb);
                 }
             }
 

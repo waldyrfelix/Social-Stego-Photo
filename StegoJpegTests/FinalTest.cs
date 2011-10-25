@@ -6,13 +6,15 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StegoJpeg;
+using StegoJpeg.Util;
 
 namespace StegoJpegTests
 {
     [TestClass]
     public class FinalTest
     {
-        private const string basePath = @"C:\Users\waldyr\Documents\Visual Studio 2010\Projects\DCTAlgorithms\DCTAlgorithms";
+        private const string basePath =
+            @"C:\Users\waldyr\Documents\Visual Studio 2010\Projects\SocialStegoPhoto\StegoJpegTests\";
 
         [TestCleanup]
         public void Cleanup()
@@ -44,13 +46,13 @@ namespace StegoJpegTests
             using (var stream = new StreamReader(path))
             {
                 var reader = new ImageBinaryReader();
-                var bytes = reader.ReadLuminanceFromImage(stream.BaseStream);
+                var bytesRGB = reader.ReadRGBFromImage(stream.BaseStream);
 
-                TestHelper.PrintMatrix("Binary image", bytes);
-                writeBlock("original.jpg", bytes);
+                TestHelper.PrintMatrix("Binary image", bytesRGB);
+                writeBlock("original.jpg", bytesRGB);
 
                 var dct = new DCT();
-                double[,] matrix = dct.CalculateDCT(bytes);
+                var matrix = dct.CalculateDCT(YCrCb.Parse(bytesRGB));
 
                 TestHelper.PrintMatrix("DCT matrix", matrix);
 
@@ -58,7 +60,7 @@ namespace StegoJpegTests
                 var stegoMatrix = stego.HideMessage(matrix, "waldyr Henrique felix Da Silva.");
                 var coveredBytes = dct.CalculateIDCT(stegoMatrix);
                 TestHelper.PrintMatrix("Coveted matrix", coveredBytes);
-                writeBlock("hided.jpg", coveredBytes);
+                writeBlock("hided.jpg", RGB.Parse(coveredBytes));
             }
         }
 
@@ -70,11 +72,11 @@ namespace StegoJpegTests
             using (var stream = new StreamReader(path))
             {
                 var reader = new ImageBinaryReader();
-                var bytes = reader.ReadLuminanceFromImage(stream.BaseStream);
+                var bytes = reader.ReadRGBFromImage(stream.BaseStream);
                 TestHelper.PrintMatrix("Stego img", bytes);
 
                 var dct = new DCT();
-                double[,] matrix = dct.CalculateDCT(bytes);
+                var matrix = dct.CalculateDCT(YCrCb.Parse(bytes));
                 TestHelper.PrintMatrix("DCT", matrix);
 
                 var stego = new Steganography();
@@ -84,76 +86,23 @@ namespace StegoJpegTests
             }
         }
 
-        [TestMethod, Ignore]
-        public void Hide_message_with_steganography_test_madeiro()
-        {
-            string path = Path.Combine(basePath, "teste3.jpg");
-            using (var stream = new StreamReader(path))
-            {
-                var reader = new ImageBinaryReader();
-                var bytes = reader.ReadLuminanceFromImage(stream.BaseStream);
 
-                writeBlock("original.jpg", bytes);
-
-                var dct = new DCT();
-                double[,] matrix = dct.CalculateDCT(bytes);
-
-                double[,] matrixPlus = modifyMostSignificantBits(matrix, 31);
-                writeBlock("original_mais_31.jpg", dct.CalculateIDCT(matrixPlus));
-
-                double[,] matrixMinus = modifyMostSignificantBits(matrix, -31);
-                writeBlock("original_menos_31.jpg", dct.CalculateIDCT(matrixMinus));
-            }
-        }
-        private double[,] modifyMostSignificantBits(double[,] bytes, int soma)
-        {
-            var matrix = new double[bytes.GetLength(0), bytes.GetLength(1)];
-
-            for (int i = 0; i < bytes.GetLength(0); i++)
-            {
-                for (int j = 0; j < bytes.GetLength(1); j++)
-                {
-                    matrix[i, j] = bytes[i, j];
-                    if (i % 8 == 0 && j % 8 == 0)
-                    {
-                        matrix[i, j] += soma;
-                    }
-                }
-            }
-            return matrix;
-        }
-
-        private void printAllEdges(int[,] matrix)
-        {
-            List<int> edges = new List<int>();
-            for (int i = 0; i < matrix.GetLength(0); i = i + 8)
-            {
-                for (int j = 0; j < matrix.GetLength(1); j = j + 8)
-                {
-                    edges.Add(matrix[i, j]);
-                    //Console.WriteLine(matrix[i, j]);
-                }
-            }
-
-            Console.WriteLine("Menor: " + edges.Min());
-            Console.WriteLine("Maior: " + edges.Max());
-
-        }
-
-        private unsafe void writeBlock(string file, byte[,] block)
+        private unsafe void writeBlock(string file, RGB[,] block)
         {
             var width = block.GetLength(0);
             var height = block.GetLength(1);
             using (var image = new Bitmap(width, height, PixelFormat.Format24bppRgb))
             {
-                var data = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
-                var pointer = (byte*)data.Scan0;
+                var data = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly,
+                                          PixelFormat.Format24bppRgb);
+                var pointer = (byte*) data.Scan0;
                 for (int i = 0; i < width; i++)
                 {
                     for (int j = 0; j < height; j++)
                     {
-                        pointer[0] = pointer[1] = pointer[2] = block[i, j];
-                        //pointer[0] = block[i, j];
+                        pointer[2] = (byte) block[i, j].R;
+                        pointer[1] = (byte) block[i, j].G;
+                        pointer[0] = (byte) block[i, j].B;
                         pointer += 3;
                     }
                 }
