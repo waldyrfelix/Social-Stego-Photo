@@ -51,7 +51,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestHelper.cs" />
-    <Compile Include="DCTTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StegoTest.cs" />
     <Compile Include="MatrixUtilTest.cs" />

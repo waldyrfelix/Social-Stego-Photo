@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DCT.cs" />
-    <Compile Include="ImageBinaryReader.cs" />
+    <Compile Include="JpegImageIO.cs" />
     <Compile Include="Util\MatrixUtil.cs" />
     <Compile Include="Quantizer.cs" />
     <Compile Include="Steganography.cs" />

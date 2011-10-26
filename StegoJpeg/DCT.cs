@@ -30,6 +30,7 @@ namespace StegoJpeg
             }
             return dctSuperBlock;
         }
+
         public YCrCb[,] CalculateIDCT(YCrCb[,] dctMatrix)
         {
             int width = dctMatrix.GetLength(0);
@@ -52,19 +53,6 @@ namespace StegoJpeg
                 }
             }
             return idctSuperBlock;
-        }
-
-        private byte[,] readSubBlock(byte[,] binaryImage, int x, int y)
-        {
-            byte[,] subBlock = new byte[BlockSize, BlockSize];
-            for (int i = 0; i < BlockSize; i++)
-            {
-                for (int j = 0; j < BlockSize; j++)
-                {
-                    subBlock[i, j] = binaryImage[x + i, y + j];
-                }
-            }
-            return subBlock;
         }
 
         private YCrCb[,] readSubBlock(YCrCb[,] binaryImage, int x, int y)
@@ -104,6 +92,9 @@ namespace StegoJpeg
                     dctBlock[k, l].Cb = Math.Round(sumCb, 2);
                 }
             }
+
+            Quantizer q = new Quantizer();
+            q.Apply(dctBlock);
 
             return dctBlock;
         }
