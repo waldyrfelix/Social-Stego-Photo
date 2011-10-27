@@ -73,7 +73,7 @@ namespace StegoJpeg
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    if (matrix[i, j].Y != 0 && Math.Abs(matrix[i, j].Y) != 1)
+                    if (matrix[i, j].Y != 0)
                     {
                         points.Add(new Point(i, j));
                     }

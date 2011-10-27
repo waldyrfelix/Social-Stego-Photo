@@ -27,17 +27,24 @@ namespace StegoJpegTests
                 var imageIo = new JpegImageIO();
                 var bytesRGB = imageIo.ReadRGBFromImage(stream.BaseStream);
 
-                TestHelper.PrintMatrix("Binary image", bytesRGB);
+               // TestHelper.PrintMatrix("Binary image", bytesRGB);
                 imageIo.WriteRGBToImage(Path.Combine(basePath, "original.jpg"), bytesRGB);
 
                 var dct = new DCT();
                 var matrix = dct.CalculateDCT(YCrCb.Parse(bytesRGB));
-
                 TestHelper.PrintMatrix("DCT matrix", matrix);
 
+                Quantizer q = new Quantizer();
+                q.ApplyQuantization(matrix);
+                TestHelper.PrintMatrix("Quantized DCT matrix", matrix);
+                
                 var stego = new Steganography();
                 var stegoMatrix = stego.HideMessage(matrix, "waldyr Henrique felix Da Silva.");
+
+                q.ApplyInverseQuantization(stegoMatrix);
+
                 var coveredBytes = dct.CalculateIDCT(stegoMatrix);
+
                 TestHelper.PrintMatrix("Coveted matrix", coveredBytes);
                 imageIo.WriteRGBToImage(Path.Combine(basePath, "hided.jpg"), RGB.Parse(coveredBytes));
             }
@@ -52,11 +59,14 @@ namespace StegoJpegTests
             {
                 var reader = new JpegImageIO();
                 var bytes = reader.ReadRGBFromImage(stream.BaseStream);
-                TestHelper.PrintMatrix("Stego img", bytes);
+                //TestHelper.PrintMatrix("Stego img", bytes);
 
                 var dct = new DCT();
                 var matrix = dct.CalculateDCT(YCrCb.Parse(bytes));
                 TestHelper.PrintMatrix("DCT", matrix);
+
+                new Quantizer().ApplyQuantization(matrix);
+                TestHelper.PrintMatrix("QDCT", matrix);
 
                 var stego = new Steganography();
                 var message = stego.ExtractMessage(matrix);

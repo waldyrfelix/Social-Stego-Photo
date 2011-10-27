@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="DCT.cs" />
     <Compile Include="JpegImageIO.cs" />
+    <Compile Include="Util\ExtensionMethods.cs" />
     <Compile Include="Util\MatrixUtil.cs" />
     <Compile Include="Quantizer.cs" />
     <Compile Include="Steganography.cs" />

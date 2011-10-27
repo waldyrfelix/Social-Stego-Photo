@@ -15,7 +15,7 @@ namespace StegoJpeg.Util
         {
             int m = rgb.GetLength(0);
             int n = rgb.GetLength(1);
-            var matrix = new YCrCb[m,n];
+            var matrix = new YCrCb[m, n];
 
             for (int i = 0; i < m; i++)
             {
@@ -29,28 +29,28 @@ namespace StegoJpeg.Util
 
         public static YCrCb Parse(RGB rgb)
         {
-            var y = calculateLuminance(rgb);
             return new YCrCb
                        {
-                           Y = y,
-                           Cr = calculateChrominanceRed(rgb, y),
-                           Cb = calculateChrominanceBlue(rgb, y),
+                           Y = calculateY(rgb),
+                           Cr = calculateCr(rgb),
+                           Cb = calculateCb(rgb),
                        };
         }
 
-        private static double calculateChrominanceBlue(RGB rgb, double luminance)
+        private static double calculateCb(RGB rgb)
         {
-            return CbMax * (rgb.B - luminance) / (1 - RGB.Wb);
+            return Math.Round(128 + (-0.169 * rgb.R - 0.331 * rgb.G + 0.5 * rgb.B));
+
         }
 
-        private static double calculateChrominanceRed(RGB rgb, double luminance)
+        private static double calculateCr(RGB rgb)
         {
-            return CrMax * (rgb.R - luminance) / (1 - RGB.Wr);
+            return Math.Round(128 + (0.5 * rgb.R - 0.419 * rgb.G - 0.081 * rgb.B));
         }
 
-        private static double calculateLuminance(RGB rgb)
+        private static double calculateY(RGB rgb)
         {
-            return rgb.R * RGB.Wr + rgb.G * RGB.Wg + rgb.B * RGB.Wb;
+            return Math.Round(rgb.R * 0.299 + rgb.G * 0.587 + rgb.B * 0.114);
         }
     }
 }

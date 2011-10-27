@@ -5,7 +5,7 @@ namespace StegoJpeg
 {
     public class DCT
     {
-        const int BlockSize = 8;
+        private const int BlockSize = 8;
 
         public YCrCb[,] CalculateDCT(YCrCb[,] binaryImage)
         {
@@ -81,9 +81,12 @@ namespace StegoJpeg
                     {
                         for (int j = 0; j < BlockSize; j++)
                         {
-                            sumY += coefficient(k) * coefficient(l) * originalBlock[i, j].Y * calculateCosine(k, i) * calculateCosine(l, j) / 4;
-                            sumCr += coefficient(k) * coefficient(l) * originalBlock[i, j].Cr * calculateCosine(k, i) * calculateCosine(l, j) / 4;
-                            sumCb += coefficient(k) * coefficient(l) * originalBlock[i, j].Cb * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                            sumY += coefficient(k) * coefficient(l) * originalBlock[i, j].Y * calculateCosine(k, i) *
+                                    calculateCosine(l, j) / 4;
+                            sumCr += coefficient(k) * coefficient(l) * originalBlock[i, j].Cr * calculateCosine(k, i) *
+                                     calculateCosine(l, j) / 4;
+                            sumCb += coefficient(k) * coefficient(l) * originalBlock[i, j].Cb * calculateCosine(k, i) *
+                                     calculateCosine(l, j) / 4;
                         }
                     }
 
@@ -92,9 +95,6 @@ namespace StegoJpeg
                     dctBlock[k, l].Cb = Math.Round(sumCb, 2);
                 }
             }
-
-            Quantizer q = new Quantizer();
-            q.Apply(dctBlock);
 
             return dctBlock;
         }
@@ -114,15 +114,18 @@ namespace StegoJpeg
                     {
                         for (int l = 0; l < n; l++)
                         {
-                            sumY += coefficient(k) * coefficient(l) * dctBlock[k, l].Y * calculateCosine(k, i) * calculateCosine(l, j) / 4;
-                            sumCr += coefficient(k) * coefficient(l) * dctBlock[k, l].Cr * calculateCosine(k, i) * calculateCosine(l, j) / 4;
-                            sumCb += coefficient(k) * coefficient(l) * dctBlock[k, l].Cb * calculateCosine(k, i) * calculateCosine(l, j) / 4;
+                            sumY += coefficient(k) * coefficient(l) * dctBlock[k, l].Y * calculateCosine(k, i) *
+                                    calculateCosine(l, j) / 4;
+                            sumCr += coefficient(k) * coefficient(l) * dctBlock[k, l].Cr * calculateCosine(k, i) *
+                                     calculateCosine(l, j) / 4;
+                            sumCb += coefficient(k) * coefficient(l) * dctBlock[k, l].Cb * calculateCosine(k, i) *
+                                     calculateCosine(l, j) / 4;
                         }
                     }
 
-                    idctBlock[i, j].Y = Math.Round(sumY);
-                    idctBlock[i, j].Cr = Math.Round(sumCr);
-                    idctBlock[i, j].Cb = Math.Round(sumCb);
+                    idctBlock[i, j].Y = Math.Round(sumY).ToByteBounds();
+                    idctBlock[i, j].Cr = Math.Round(sumCr).ToByteBounds();
+                    idctBlock[i, j].Cb = Math.Round(sumCb).ToByteBounds();
                 }
             }
 

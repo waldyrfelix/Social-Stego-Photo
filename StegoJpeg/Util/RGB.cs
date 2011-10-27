@@ -5,8 +5,8 @@ namespace StegoJpeg.Util
     public struct RGB
     {
         public const double Wr = 0.299;
-        public const double Wg = 0.114;
-        public const double Wb = 0.587;
+        public const double Wg = 0.587;
+        public const double Wb = 0.114;
 
         public double R { get; set; }
         public double G { get; set; }
@@ -39,19 +39,19 @@ namespace StegoJpeg.Util
                        };
         }
 
+        private static double calculateRed(YCrCb yCrCb)
+        {
+            return  Math.Round(yCrCb.Y + 1.402 * (yCrCb.Cr - 128)).ToByteBounds() ;
+        }
+
         private static double calculateGreen(YCrCb yCrCb)
         {
-            return yCrCb.Y - yCrCb.Cb * (Wb * (1 - Wb)) / YCrCb.CbMax * Wg - yCrCb.Cr * (Wr * (1 - Wr)) / YCrCb.CrMax * Wg;
+            return  Math.Round(yCrCb.Y - 0.34414*(yCrCb.Cb - 128) - 0.71414*(yCrCb.Cr - 128)).ToByteBounds();
         }
 
         private static double calculateBlue(YCrCb yCrCb)
         {
-            return yCrCb.Y + yCrCb.Cb * (1 - Wb) / YCrCb.CbMax;
-        }
-
-        private static double calculateRed(YCrCb yCrCb)
-        {
-            return yCrCb.Y + yCrCb.Cr * (1 - Wr) / YCrCb.CrMax;
+            return Math.Round(yCrCb.Y + 1.772*(yCrCb.Cb - 128)).ToByteBounds();
         }
     }
 }

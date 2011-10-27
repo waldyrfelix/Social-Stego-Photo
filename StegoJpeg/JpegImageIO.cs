@@ -25,9 +25,9 @@ namespace StegoJpeg
                     {
                         for (int j = 0; j < blockData.Height; j++)
                         {
-                            superBlock[i, j].R = pointer[2];
+                            superBlock[i, j].R = pointer[0];
                             superBlock[i, j].G = pointer[1];
-                            superBlock[i, j].B = pointer[0];
+                            superBlock[i, j].B = pointer[2];
                             pointer += 3;
                         }
                         pointer += blockData.Stride - (blockData.Width * 3);
@@ -54,9 +54,9 @@ namespace StegoJpeg
                     {
                         for (int j = 0; j < height; j++)
                         {
-                            pointer[2] = (byte)matrix[i, j].R;
+                            pointer[0] = (byte)matrix[i, j].R;
                             pointer[1] = (byte)matrix[i, j].G;
-                            pointer[0] = (byte)matrix[i, j].B;
+                            pointer[2] = (byte)matrix[i, j].B;
                             pointer += 3;
                         }
                     }
