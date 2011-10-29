@@ -37,6 +37,7 @@ namespace StegoJpeg
 
         private void calculateDCTForBlock(YCrCb[,] matrix, int x, int y)
         {
+            var tempMatrix = new YCrCb[BlockSize, BlockSize];
             for (int k = x; k < x + BlockSize; k++)
             {
                 for (int l = y; l < y + BlockSize; l++)
@@ -56,15 +57,26 @@ namespace StegoJpeg
                         }
                     }
 
-                    matrix[k, l].Y = Math.Round(sumY, 2);
-                    matrix[k, l].Cr = Math.Round(sumCr, 2);
-                    matrix[k, l].Cb = Math.Round(sumCb, 2);
+                    tempMatrix[k, l].Y = Math.Round(sumY, 2);
+                    tempMatrix[k, l].Cr = Math.Round(sumCr, 2);
+                    tempMatrix[k, l].Cb = Math.Round(sumCb, 2);
+                }
+            }
+
+            for (int i = x; i < x + BlockSize; i++)
+            {
+                for (int j = y; j < y + BlockSize; j++)
+                {
+                    matrix[i, j].Y = tempMatrix[i, j].Y;
+                    matrix[i, j].Cb = tempMatrix[i, j].Cb;
+                    matrix[i, j].Cr = tempMatrix[i, j].Cr;
                 }
             }
         }
 
         private void calculateIDCTForBlock(YCrCb[,] matrix, int x, int y)
         {
+            var tempMatrix = new YCrCb[BlockSize, BlockSize];
             for (int i = x; i < x + BlockSize; i++)
             {
                 for (int j = y; j < y + BlockSize; j++)
@@ -84,9 +96,19 @@ namespace StegoJpeg
                         }
                     }
 
-                    matrix[i, j].Y = Math.Round(sumY).ToByteBounds();
-                    matrix[i, j].Cr = Math.Round(sumCr).ToByteBounds();
-                    matrix[i, j].Cb = Math.Round(sumCb).ToByteBounds();
+                    tempMatrix[i, j].Y = Math.Round(sumY);
+                    tempMatrix[i, j].Cr = Math.Round(sumCr);
+                    tempMatrix[i, j].Cb = Math.Round(sumCb);
+                }
+            }
+
+            for (int i = x; i < x + BlockSize; i++)
+            {
+                for (int j = y; j < y + BlockSize; j++)
+                {
+                    matrix[i, j].Y = tempMatrix[i, j].Y;
+                    matrix[i, j].Cb = tempMatrix[i, j].Cb;
+                    matrix[i, j].Cr = tempMatrix[i, j].Cr;
                 }
             }
         }

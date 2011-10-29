@@ -1,4 +1,5 @@
-﻿namespace StegoJpeg
+﻿using System;
+namespace StegoJpeg
 {
     public class MatrixUtil
     {
@@ -19,6 +20,19 @@
                 }
             }
             return m3;
+        }
+
+        public static T[,] Copy<T>(T[,] matrix) where T: ICloneable
+        {
+            var copy = new T[matrix.GetLength(0), matrix.GetLength(1)];
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    copy[i, j] = (T) matrix[i, j].Clone();
+                }
+            }
+            return copy;
         }
     }
 }

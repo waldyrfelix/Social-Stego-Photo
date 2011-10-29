@@ -2,7 +2,7 @@
 
 namespace StegoJpeg.Util
 {
-    public struct YCrCb
+    public struct YCrCb : ICloneable
     {
         public const double CrMax = 0.436;
         public const double CbMax = 0.615;
@@ -10,6 +10,11 @@ namespace StegoJpeg.Util
         public double Y { get; set; }
         public double Cr { get; set; }
         public double Cb { get; set; }
+
+        public object Clone()
+        {
+            return new YCrCb {Y = this.Y, Cr = this.Cr, Cb = this.Cb};
+        }
 
         public static YCrCb[,] Parse(RGB[,] rgb)
         {
