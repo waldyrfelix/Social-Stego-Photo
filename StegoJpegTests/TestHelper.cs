@@ -64,7 +64,7 @@ namespace StegoJpegTests
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    Console.Write((matrix[i, j].Y).ToString().PadLeft(4, ' '));
+                    Console.Write((matrix[i, j].Y).ToString().PadLeft(6, ' '));
                 }
                 Console.WriteLine();
             }

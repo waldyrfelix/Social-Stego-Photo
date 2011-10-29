@@ -21,14 +21,14 @@ namespace StegoJpegTests
         [TestMethod]
         public void Hide_message_with_steganography()
         {
-            string path = Path.Combine(basePath, "teste4.jpg");
+            string path = Path.Combine(basePath, "lenna.png");
             using (var stream = new StreamReader(path))
             {
                 var imageIo = new JpegImageIO();
                 var bytesRGB = imageIo.ReadRGBFromImage(stream.BaseStream);
 
                 //TestHelper.PrintMatrix("Binary image", bytesRGB);
-                //imageIo.WriteRGBToImage(Path.Combine(basePath, "original.jpg"), bytesRGB);
+                imageIo.WriteRGBToImage(Path.Combine(basePath, "original.jpg"), bytesRGB);
 
                 var matrix = YCrCb.Parse(bytesRGB);
                 TestHelper.PrintMatrix("Luminance Coeff", matrix);
@@ -45,14 +45,13 @@ namespace StegoJpegTests
                 stego.HideMessage(matrix, "di");
                 TestHelper.PrintMatrix("Stego", matrix);
 
-
                 q.ApplyInverseQuantization(matrix);
                 TestHelper.PrintMatrix("Unquantized DCT", matrix);
 
                 dct.CalculateIDCT(matrix);
                 TestHelper.PrintMatrix("Inversed DCT", matrix);
                 
-                //imageIo.WriteRGBToImage(Path.Combine(basePath, "hided.jpg"), RGB.Parse(matrix));
+                imageIo.WriteRGBToImage(Path.Combine(basePath, "hided.jpg"), RGB.Parse(matrix));
             }
         }
 

@@ -37,22 +37,21 @@ namespace StegoJpeg
 
         private void calculateDCTForBlock(YCrCb[,] matrix, int x, int y)
         {
-            var tempMatrix = new YCrCb[BlockSize, BlockSize];
-            for (int k = x; k < x + BlockSize; k++)
+            var tempMatrix = new YCrCb[BlockSize,BlockSize];
+            for (int k = 0; k < BlockSize; k++)
             {
-                for (int l = y; l < y + BlockSize; l++)
+                for (int l = 0; l < BlockSize; l++)
                 {
-                    double sumY, sumCr, sumCb;
-                    sumY = sumCr = sumCb = 0;
-                    for (int i = x; i < BlockSize; i++)
+                    double sumY = 0, sumCr = 0, sumCb = 0;
+                    for (int i = 0; i < BlockSize; i++)
                     {
-                        for (int j = y; j < BlockSize; j++)
+                        for (int j = 0; j < BlockSize; j++)
                         {
-                            sumY += coefficient(k)*coefficient(l)*matrix[i, j].Y*calculateCosine(k, i)*
+                            sumY += coefficient(k)*coefficient(l)*matrix[i + x, j + y].Y*calculateCosine(k, i)*
                                     calculateCosine(l, j)/4;
-                            sumCr += coefficient(k)*coefficient(l)*matrix[i, j].Cr*calculateCosine(k, i)*
+                            sumCr += coefficient(k)*coefficient(l)*matrix[i + x, j + y].Cr*calculateCosine(k, i)*
                                      calculateCosine(l, j)/4;
-                            sumCb += coefficient(k)*coefficient(l)*matrix[i, j].Cb*calculateCosine(k, i)*
+                            sumCb += coefficient(k)*coefficient(l)*matrix[i + x, j + y].Cb*calculateCosine(k, i)*
                                      calculateCosine(l, j)/4;
                         }
                     }
@@ -63,35 +62,40 @@ namespace StegoJpeg
                 }
             }
 
-            for (int i = x; i < x + BlockSize; i++)
+            copyTempMatrixToRealMatrix(x, y, matrix, tempMatrix);
+        }
+
+        private void copyTempMatrixToRealMatrix(int x, int y, YCrCb[,] matrix, YCrCb[,] tempMatrix)
+        {
+            for (int i = 0; i < BlockSize; i++)
             {
-                for (int j = y; j < y + BlockSize; j++)
+                for (int j = 0; j < BlockSize; j++)
                 {
-                    matrix[i, j].Y = tempMatrix[i, j].Y;
-                    matrix[i, j].Cb = tempMatrix[i, j].Cb;
-                    matrix[i, j].Cr = tempMatrix[i, j].Cr;
+                    matrix[i + x, j + y].Y = tempMatrix[i, j].Y;
+                    matrix[i + x, j + y].Cb = tempMatrix[i, j].Cb;
+                    matrix[i + x, j + y].Cr = tempMatrix[i, j].Cr;
                 }
             }
         }
 
         private void calculateIDCTForBlock(YCrCb[,] matrix, int x, int y)
         {
-            var tempMatrix = new YCrCb[BlockSize, BlockSize];
-            for (int i = x; i < x + BlockSize; i++)
+            var tempMatrix = new YCrCb[BlockSize,BlockSize];
+            for (int i = 0; i < BlockSize; i++)
             {
-                for (int j = y; j < y + BlockSize; j++)
+                for (int j = 0; j < BlockSize; j++)
                 {
                     double sumY, sumCr, sumCb;
                     sumY = sumCr = sumCb = 0;
-                    for (int k = x; k < y + BlockSize; k++)
+                    for (int k = 0; k < BlockSize; k++)
                     {
-                        for (int l = y; l < y + BlockSize; l++)
+                        for (int l = 0; l < BlockSize; l++)
                         {
-                            sumY += coefficient(k)*coefficient(l)*matrix[k, l].Y*calculateCosine(k, i)*
+                            sumY += coefficient(k)*coefficient(l)*matrix[k + x, l + y].Y*calculateCosine(k, i)*
                                     calculateCosine(l, j)/4;
-                            sumCr += coefficient(k)*coefficient(l)*matrix[k, l].Cr*calculateCosine(k, i)*
+                            sumCr += coefficient(k)*coefficient(l)*matrix[k + x, l + y].Cr*calculateCosine(k, i)*
                                      calculateCosine(l, j)/4;
-                            sumCb += coefficient(k)*coefficient(l)*matrix[k, l].Cb*calculateCosine(k, i)*
+                            sumCb += coefficient(k)*coefficient(l)*matrix[k + x, l + y].Cb*calculateCosine(k, i)*
                                      calculateCosine(l, j)/4;
                         }
                     }
@@ -102,15 +106,7 @@ namespace StegoJpeg
                 }
             }
 
-            for (int i = x; i < x + BlockSize; i++)
-            {
-                for (int j = y; j < y + BlockSize; j++)
-                {
-                    matrix[i, j].Y = tempMatrix[i, j].Y;
-                    matrix[i, j].Cb = tempMatrix[i, j].Cb;
-                    matrix[i, j].Cr = tempMatrix[i, j].Cr;
-                }
-            }
+            copyTempMatrixToRealMatrix(x, y, matrix, tempMatrix);
         }
 
         private double calculateCosine(double k, int i)

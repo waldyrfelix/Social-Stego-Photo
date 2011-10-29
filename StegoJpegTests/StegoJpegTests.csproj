@@ -62,6 +62,7 @@
     <Compile Include="MatrixUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lenna.png" />
     <Content Include="teste1.jpg" />
     <Content Include="teste2.jpg" />
     <Content Include="teste3.jpg" />
