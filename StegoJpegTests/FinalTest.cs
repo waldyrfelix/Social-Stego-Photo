@@ -21,32 +21,38 @@ namespace StegoJpegTests
         [TestMethod]
         public void Hide_message_with_steganography()
         {
-            string path = Path.Combine(basePath, "teste3.jpg");
+            string path = Path.Combine(basePath, "teste4.jpg");
             using (var stream = new StreamReader(path))
             {
                 var imageIo = new JpegImageIO();
                 var bytesRGB = imageIo.ReadRGBFromImage(stream.BaseStream);
 
-               // TestHelper.PrintMatrix("Binary image", bytesRGB);
-                imageIo.WriteRGBToImage(Path.Combine(basePath, "original.jpg"), bytesRGB);
+                //TestHelper.PrintMatrix("Binary image", bytesRGB);
+                //imageIo.WriteRGBToImage(Path.Combine(basePath, "original.jpg"), bytesRGB);
+
+                var matrix = YCrCb.Parse(bytesRGB);
+                TestHelper.PrintMatrix("Luminance Coeff", matrix);
 
                 var dct = new DCT();
-                var matrix = dct.CalculateDCT(YCrCb.Parse(bytesRGB));
-                TestHelper.PrintMatrix("DCT matrix", matrix);
+                dct.CalculateDCT(matrix);
+                TestHelper.PrintMatrix("DCT", matrix);
 
                 Quantizer q = new Quantizer();
                 q.ApplyQuantization(matrix);
-                TestHelper.PrintMatrix("Quantized DCT matrix", matrix);
+                TestHelper.PrintMatrix("Quantized DCT", matrix);
                 
                 var stego = new Steganography();
-                var stegoMatrix = stego.HideMessage(matrix, "waldyr Henrique felix Da Silva.");
+                stego.HideMessage(matrix, "di");
+                TestHelper.PrintMatrix("Stego", matrix);
 
-                q.ApplyInverseQuantization(stegoMatrix);
 
-                var coveredBytes = dct.CalculateIDCT(stegoMatrix);
+                q.ApplyInverseQuantization(matrix);
+                TestHelper.PrintMatrix("Unquantized DCT", matrix);
 
-                TestHelper.PrintMatrix("Coveted matrix", coveredBytes);
-                imageIo.WriteRGBToImage(Path.Combine(basePath, "hided.jpg"), RGB.Parse(coveredBytes));
+                dct.CalculateIDCT(matrix);
+                TestHelper.PrintMatrix("Inversed DCT", matrix);
+                
+                //imageIo.WriteRGBToImage(Path.Combine(basePath, "hided.jpg"), RGB.Parse(matrix));
             }
         }
 
@@ -62,7 +68,8 @@ namespace StegoJpegTests
                 //TestHelper.PrintMatrix("Stego img", bytes);
 
                 var dct = new DCT();
-                var matrix = dct.CalculateDCT(YCrCb.Parse(bytes));
+                var matrix = YCrCb.Parse(bytes);
+                dct.CalculateDCT(matrix);
                 TestHelper.PrintMatrix("DCT", matrix);
 
                 new Quantizer().ApplyQuantization(matrix);

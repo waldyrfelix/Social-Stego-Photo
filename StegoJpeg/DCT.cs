@@ -7,141 +7,100 @@ namespace StegoJpeg
     {
         private const int BlockSize = 8;
 
-        public YCrCb[,] CalculateDCT(YCrCb[,] binaryImage)
+        public void CalculateDCT(YCrCb[,] matrix)
         {
-            int width = binaryImage.GetLength(0);
-            int height = binaryImage.GetLength(1);
+            int width = matrix.GetLength(0);
+            int height = matrix.GetLength(1);
 
-            var dctSuperBlock = new YCrCb[width, height];
             for (int x = 0; x < width; x = x + BlockSize)
             {
                 for (int y = 0; y < height; y = y + BlockSize)
                 {
-                    var block = readSubBlock(binaryImage, x, y);
-                    var dctBlock = calculateDCTForBlock(block);
-                    for (int i = 0; i < BlockSize; i++)
-                    {
-                        for (int j = 0; j < BlockSize; j++)
-                        {
-                            dctSuperBlock[x + i, y + j] = dctBlock[i, j];
-                        }
-                    }
+                    calculateDCTForBlock(matrix, x, y);
                 }
             }
-            return dctSuperBlock;
         }
 
-        public YCrCb[,] CalculateIDCT(YCrCb[,] dctMatrix)
+        public void CalculateIDCT(YCrCb[,] matrix)
         {
-            int width = dctMatrix.GetLength(0);
-            int height = dctMatrix.GetLength(1);
+            int width = matrix.GetLength(0);
+            int height = matrix.GetLength(1);
 
-            var idctSuperBlock = new YCrCb[width, height];
             for (int x = 0; x < width; x = x + BlockSize)
             {
                 for (int y = 0; y < height; y = y + BlockSize)
                 {
-                    var block = readSubBlock(dctMatrix, x, y);
-                    var idctBlock = calculateIDCTForBlock(block);
-                    for (int i = 0; i < BlockSize; i++)
-                    {
-                        for (int j = 0; j < BlockSize; j++)
-                        {
-                            idctSuperBlock[x + i, y + j] = idctBlock[i, j];
-                        }
-                    }
+                    calculateIDCTForBlock(matrix, x, y);
                 }
             }
-            return idctSuperBlock;
         }
 
-        private YCrCb[,] readSubBlock(YCrCb[,] binaryImage, int x, int y)
+        private void calculateDCTForBlock(YCrCb[,] matrix, int x, int y)
         {
-            var subBlock = new YCrCb[BlockSize, BlockSize];
-            for (int i = 0; i < BlockSize; i++)
+            for (int k = x; k < x + BlockSize; k++)
             {
-                for (int j = 0; j < BlockSize; j++)
-                {
-                    subBlock[i, j] = binaryImage[x + i, y + j];
-                }
-            }
-            return subBlock;
-        }
-
-        private YCrCb[,] calculateDCTForBlock(YCrCb[,] originalBlock)
-        {
-            var dctBlock = new YCrCb[BlockSize, BlockSize];
-            for (int k = 0; k < BlockSize; k++)
-            {
-                for (int l = 0; l < BlockSize; l++)
+                for (int l = y; l < y + BlockSize; l++)
                 {
                     double sumY, sumCr, sumCb;
                     sumY = sumCr = sumCb = 0;
-                    for (int i = 0; i < BlockSize; i++)
+                    for (int i = x; i < BlockSize; i++)
                     {
-                        for (int j = 0; j < BlockSize; j++)
+                        for (int j = y; j < BlockSize; j++)
                         {
-                            sumY += coefficient(k) * coefficient(l) * originalBlock[i, j].Y * calculateCosine(k, i) *
-                                    calculateCosine(l, j) / 4;
-                            sumCr += coefficient(k) * coefficient(l) * originalBlock[i, j].Cr * calculateCosine(k, i) *
-                                     calculateCosine(l, j) / 4;
-                            sumCb += coefficient(k) * coefficient(l) * originalBlock[i, j].Cb * calculateCosine(k, i) *
-                                     calculateCosine(l, j) / 4;
+                            sumY += coefficient(k)*coefficient(l)*matrix[i, j].Y*calculateCosine(k, i)*
+                                    calculateCosine(l, j)/4;
+                            sumCr += coefficient(k)*coefficient(l)*matrix[i, j].Cr*calculateCosine(k, i)*
+                                     calculateCosine(l, j)/4;
+                            sumCb += coefficient(k)*coefficient(l)*matrix[i, j].Cb*calculateCosine(k, i)*
+                                     calculateCosine(l, j)/4;
                         }
                     }
 
-                    dctBlock[k, l].Y = Math.Round(sumY, 2);
-                    dctBlock[k, l].Cr = Math.Round(sumCr, 2);
-                    dctBlock[k, l].Cb = Math.Round(sumCb, 2);
+                    matrix[k, l].Y = Math.Round(sumY, 2);
+                    matrix[k, l].Cr = Math.Round(sumCr, 2);
+                    matrix[k, l].Cb = Math.Round(sumCb, 2);
                 }
             }
-
-            return dctBlock;
         }
 
-        private YCrCb[,] calculateIDCTForBlock(YCrCb[,] dctBlock)
+        private void calculateIDCTForBlock(YCrCb[,] matrix, int x, int y)
         {
-            var idctBlock = new YCrCb[BlockSize, BlockSize];
-            int n = dctBlock.GetLength(1);
-
-            for (int i = 0; i < n; i++)
+            for (int i = x; i < x + BlockSize; i++)
             {
-                for (int j = 0; j < n; j++)
+                for (int j = y; j < y + BlockSize; j++)
                 {
                     double sumY, sumCr, sumCb;
                     sumY = sumCr = sumCb = 0;
-                    for (int k = 0; k < n; k++)
+                    for (int k = x; k < y + BlockSize; k++)
                     {
-                        for (int l = 0; l < n; l++)
+                        for (int l = y; l < y + BlockSize; l++)
                         {
-                            sumY += coefficient(k) * coefficient(l) * dctBlock[k, l].Y * calculateCosine(k, i) *
-                                    calculateCosine(l, j) / 4;
-                            sumCr += coefficient(k) * coefficient(l) * dctBlock[k, l].Cr * calculateCosine(k, i) *
-                                     calculateCosine(l, j) / 4;
-                            sumCb += coefficient(k) * coefficient(l) * dctBlock[k, l].Cb * calculateCosine(k, i) *
-                                     calculateCosine(l, j) / 4;
+                            sumY += coefficient(k)*coefficient(l)*matrix[k, l].Y*calculateCosine(k, i)*
+                                    calculateCosine(l, j)/4;
+                            sumCr += coefficient(k)*coefficient(l)*matrix[k, l].Cr*calculateCosine(k, i)*
+                                     calculateCosine(l, j)/4;
+                            sumCb += coefficient(k)*coefficient(l)*matrix[k, l].Cb*calculateCosine(k, i)*
+                                     calculateCosine(l, j)/4;
                         }
                     }
 
-                    idctBlock[i, j].Y = Math.Round(sumY).ToByteBounds();
-                    idctBlock[i, j].Cr = Math.Round(sumCr).ToByteBounds();
-                    idctBlock[i, j].Cb = Math.Round(sumCb).ToByteBounds();
+                    matrix[i, j].Y = Math.Round(sumY).ToByteBounds();
+                    matrix[i, j].Cr = Math.Round(sumCr).ToByteBounds();
+                    matrix[i, j].Cb = Math.Round(sumCb).ToByteBounds();
                 }
             }
-
-            return idctBlock;
         }
 
-        internal double calculateCosine(double k, int i)
+        private double calculateCosine(double k, int i)
         {
-            return Math.Cos(Math.PI / 16 * k * (2 * i + 1));
+            return Math.Cos(Math.PI/16*k*(2*i + 1));
         }
 
-        internal double coefficient(int coord)
+        private double coefficient(int coord)
         {
             if (coord == 0)
             {
-                return 1 / Math.Sqrt(2);
+                return 1/Math.Sqrt(2);
             }
             return 1;
         }

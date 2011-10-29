@@ -114,7 +114,7 @@ namespace StegoJpeg
             return Encoding.ASCII.GetString(bytes).Split('\0')[0];
         }
 
-        public YCrCb[,] HideMessage(YCrCb[,] matrix, string message)
+        public void HideMessage(YCrCb[,] matrix, string message)
         {
             byte[] messageBytes = Encoding.ASCII.GetBytes(message + '\0');
             var bitArray = new BitArray(messageBytes);
@@ -126,8 +126,6 @@ namespace StegoJpeg
             {
                 matrix[path[i].X, path[i].Y].Y = calculateLSB(matrix[path[i].X, path[i].Y].Y, Convert.ToInt32(enumerator.Current));
             }
-
-            return matrix;
         }
 
         private double calculateLSB(double original, int dado)

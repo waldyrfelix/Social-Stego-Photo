@@ -59,16 +59,38 @@ namespace StegoJpegTests
         }
         public static void PrintMatrix(string name, YCrCb[,] matrix)
         {
-            Console.WriteLine(name);
+            Console.WriteLine(name + " Y ");
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    Console.Write((matrix[i, j].Y).ToString().PadLeft(10, ' '));
+                    Console.Write((matrix[i, j].Y).ToString().PadLeft(4, ' '));
                 }
                 Console.WriteLine();
             }
             Console.WriteLine();
+
+            //Console.WriteLine(name + " Cr ");
+            //for (int i = 0; i < matrix.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < matrix.GetLength(1); j++)
+            //    {
+            //        Console.Write((matrix[i, j].Cr).ToString().PadLeft(10, ' '));
+            //    }
+            //    Console.WriteLine();
+            //}
+            //Console.WriteLine();
+
+            //Console.WriteLine(name + " Cb ");
+            //for (int i = 0; i < matrix.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < matrix.GetLength(1); j++)
+            //    {
+            //        Console.Write((matrix[i, j].Cb).ToString().PadLeft(10, ' '));
+            //    }
+            //    Console.WriteLine();
+            //}
+            //Console.WriteLine();
         }
     }
 }
