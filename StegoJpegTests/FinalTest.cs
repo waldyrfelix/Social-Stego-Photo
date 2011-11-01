@@ -28,30 +28,32 @@ namespace StegoJpegTests
                 var bytesRGB = imageIo.ReadRGBFromImage(stream.BaseStream);
 
                 //TestHelper.PrintMatrix("Binary image", bytesRGB);
-                imageIo.WriteRGBToImage(Path.Combine(basePath, "original.jpg"), bytesRGB);
+                //imageIo.WriteRGBToImage(Path.Combine(basePath, "original.jpg"), bytesRGB);
 
                 var matrix = YCrCb.Parse(bytesRGB);
-                TestHelper.PrintMatrix("Luminance Coeff", matrix);
+                //TestHelper.PrintMatrix("Luminance Coeff", matrix);
 
                 var dct = new DCT();
+                dct.Subsample(matrix);
                 dct.CalculateDCT(matrix);
-                TestHelper.PrintMatrix("DCT", matrix);
+                //TestHelper.PrintMatrix("DCT", matrix);
 
                 Quantizer q = new Quantizer();
-                q.ApplyQuantization(matrix);
-                TestHelper.PrintMatrix("Quantized DCT", matrix);
+                q.ApplyQuantization(matrix, 90);
+                //TestHelper.PrintMatrix("Quantized DCT", matrix);
                 
                 var stego = new Steganography();
                 stego.HideMessage(matrix, "di");
-                TestHelper.PrintMatrix("Stego", matrix);
+                //TestHelper.PrintMatrix("Stego", matrix);
 
-                q.ApplyInverseQuantization(matrix);
-                TestHelper.PrintMatrix("Unquantized DCT", matrix);
+                q.ApplyInverseQuantization(matrix, 90);
+                //TestHelper.PrintMatrix("Unquantized DCT", matrix);
 
                 dct.CalculateIDCT(matrix);
-                TestHelper.PrintMatrix("Inversed DCT", matrix);
+                dct.Supersample(matrix);
+                //TestHelper.PrintMatrix("Inversed DCT", matrix);
                 
-                imageIo.WriteRGBToImage(Path.Combine(basePath, "hided.jpg"), RGB.Parse(matrix));
+                imageIo.WriteRGBToImage(Path.Combine(basePath, "hided-90.jpg"), RGB.Parse(matrix));
             }
         }
 
@@ -71,7 +73,7 @@ namespace StegoJpegTests
                 dct.CalculateDCT(matrix);
                 TestHelper.PrintMatrix("DCT", matrix);
 
-                new Quantizer().ApplyQuantization(matrix);
+                new Quantizer().ApplyQuantization(matrix, 100);
                 TestHelper.PrintMatrix("QDCT", matrix);
 
                 var stego = new Steganography();

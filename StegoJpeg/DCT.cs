@@ -122,5 +122,31 @@ namespace StegoJpeg
             }
             return 1;
         }
+
+        public void Subsample(YCrCb[,] matrix)
+        {
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    matrix[i, j].Y -= 128;
+                    matrix[i, j].Cr -= 128;
+                    matrix[i, j].Cb -= 128;
+                }
+            }
+        }
+
+        public void Supersample(YCrCb[,] matrix)
+        {
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    matrix[i, j].Y += 128;
+                    matrix[i, j].Cr += 128;
+                    matrix[i, j].Cb += 128;
+                }
+            }
+        }
     }
 }
