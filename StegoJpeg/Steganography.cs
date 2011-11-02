@@ -73,7 +73,7 @@ namespace StegoJpeg
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    if (matrix[i, j].Y != 0)
+                    //if (Math.Abs(matrix[i, j].Y) > 2)
                     {
                         points.Add(new Point(i, j));
                     }
@@ -82,14 +82,14 @@ namespace StegoJpeg
             return points;
         }
 
-        private int bitsPerNonZeroDCTCoefficient(double[,] matrix)
+        private int bitsPerNonZeroDCTCoefficient(YCrCb[,] matrix)
         {
             int count = 0;
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    if (matrix[i, j] != 0 && Math.Abs(matrix[i, j]) != 1)
+                   // if (Math.Abs(matrix[i, j].Y) > 2)
                     {
                         count++;
                     }
@@ -101,36 +101,50 @@ namespace StegoJpeg
         public string ExtractMessage(YCrCb[,] matrix)
         {
             var path = Permutation(matrix);
-            var bitArray = new BitArray((int)Math.Ceiling(path.Count / 8.0) * 8);
+            var pathIndex = 0;
+            var bitsFromSizeField = new BitArray(32);
+            for (pathIndex = 0; pathIndex < bitsFromSizeField.Length; pathIndex++)
+                bitsFromSizeField.Set(pathIndex, ((int)matrix[path[pathIndex].X, path[pathIndex].Y].Y) % 2 != 0);
 
-            for (int i = 0; i < path.Count; i++)
-            {
-                bitArray.Set(i, ((int)matrix[path[i].X, path[i].Y].Y) % 2 == 1);
-            }
+            var bytesFromSizeField = new byte[4];
+            bitsFromSizeField.CopyTo(bytesFromSizeField, 0);
 
-            var bytes = new byte[bitArray.Length / 8];
-            bitArray.CopyTo(bytes, 0);
+            int sizeField = BitConverter.ToInt32(bytesFromSizeField, 0);
 
-            return Encoding.ASCII.GetString(bytes).Split('\0')[0];
+            var bitsFromDataField = new BitArray(sizeField);
+            for (int i = 0; i < sizeField; i++, pathIndex++)
+                bitsFromDataField.Set(i, ((int)matrix[path[pathIndex].X, path[pathIndex].Y].Y) % 2 != 0);
+
+            var bytesFromDataField = new byte[(int)Math.Ceiling(sizeField / 8.0)];
+            bitsFromDataField.CopyTo(bytesFromDataField, 0);
+
+            return Encoding.ASCII.GetString(bytesFromDataField);
         }
 
         public void HideMessage(YCrCb[,] matrix, string message)
         {
-            byte[] messageBytes = Encoding.ASCII.GetBytes(message + '\0');
-            var bitArray = new BitArray(messageBytes);
-            var path = Permutation(matrix);
-            int i;
+            if ((bitsPerNonZeroDCTCoefficient(matrix) / 8) - 4 < message.Length)
+                throw new ArgumentException("Message too long to be embedded.");
 
-            IEnumerator enumerator = bitArray.GetEnumerator();
-            for (i = 0; i < path.Count && enumerator.MoveNext(); i++)
+            var path = Permutation(matrix);
+            var bitsFromSizeField = new BitArray(BitConverter.GetBytes(message.Length * 8));
+            var bitsFromDataField = new BitArray(Encoding.ASCII.GetBytes(message));
+            int i = 0;
+            foreach (var bit in bitsFromSizeField)
             {
-                matrix[path[i].X, path[i].Y].Y = calculateLSB(matrix[path[i].X, path[i].Y].Y, Convert.ToInt32(enumerator.Current));
+                matrix[path[i].X, path[i].Y].Y = calculateLSB(matrix[path[i].X, path[i].Y].Y, Convert.ToInt32(bit));
+                i++;
+            }
+            foreach (var bit in bitsFromDataField)
+            {
+                matrix[path[i].X, path[i].Y].Y = calculateLSB(matrix[path[i].X, path[i].Y].Y, Convert.ToInt32(bit));
+                i++;
             }
         }
 
         private double calculateLSB(double original, int dado)
         {
-            return Math.Round(original + dado - (int)original % 2, 2);
+            return original + dado - (int)original % 2;
         }
     }
 }
