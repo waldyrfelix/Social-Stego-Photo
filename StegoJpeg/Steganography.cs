@@ -73,7 +73,7 @@ namespace StegoJpeg
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    //if (Math.Abs(matrix[i, j].Y) > 2)
+                    if (matrix[i, j].Y != 0 && matrix[i, j].Y != 1)
                     {
                         points.Add(new Point(i, j));
                     }
@@ -89,7 +89,7 @@ namespace StegoJpeg
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                   // if (Math.Abs(matrix[i, j].Y) > 2)
+                    if (matrix[i, j].Y != 0 && matrix[i, j].Y != 1)
                     {
                         count++;
                     }
@@ -104,8 +104,10 @@ namespace StegoJpeg
             var pathIndex = 0;
             var bitsFromSizeField = new BitArray(32);
             for (pathIndex = 0; pathIndex < bitsFromSizeField.Length; pathIndex++)
-                bitsFromSizeField.Set(pathIndex, ((int)matrix[path[pathIndex].X, path[pathIndex].Y].Y) % 2 != 0);
-
+            {
+                int lsb = ((int) matrix[path[pathIndex].X, path[pathIndex].Y].Y)%2;
+                bitsFromSizeField.Set(pathIndex, lsb != 0);
+            }
             var bytesFromSizeField = new byte[4];
             bitsFromSizeField.CopyTo(bytesFromSizeField, 0);
 
@@ -123,18 +125,20 @@ namespace StegoJpeg
 
         public void HideMessage(YCrCb[,] matrix, string message)
         {
-            if ((bitsPerNonZeroDCTCoefficient(matrix) / 8) - 4 < message.Length)
+            if (bitsPerNonZeroDCTCoefficient(matrix) - 32 < message.Length * 8)
                 throw new ArgumentException("Message too long to be embedded.");
 
             var path = Permutation(matrix);
             var bitsFromSizeField = new BitArray(BitConverter.GetBytes(message.Length * 8));
-            var bitsFromDataField = new BitArray(Encoding.ASCII.GetBytes(message));
             int i = 0;
             foreach (var bit in bitsFromSizeField)
             {
                 matrix[path[i].X, path[i].Y].Y = calculateLSB(matrix[path[i].X, path[i].Y].Y, Convert.ToInt32(bit));
                 i++;
             }
+
+            var bitsFromDataField = new BitArray(Encoding.ASCII.GetBytes(message));
+            i = 32;
             foreach (var bit in bitsFromDataField)
             {
                 matrix[path[i].X, path[i].Y].Y = calculateLSB(matrix[path[i].X, path[i].Y].Y, Convert.ToInt32(bit));
@@ -144,7 +148,7 @@ namespace StegoJpeg
 
         private double calculateLSB(double original, int dado)
         {
-            return original + dado - (int)original % 2;
+            return original + dado - (int) Math.Abs(original % 2);
         }
     }
 }
