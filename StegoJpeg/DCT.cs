@@ -65,19 +65,6 @@ namespace StegoJpeg
             copyTempMatrixToRealMatrix(x, y, matrix, tempMatrix);
         }
 
-        private void copyTempMatrixToRealMatrix(int x, int y, YCrCb[,] matrix, YCrCb[,] tempMatrix)
-        {
-            for (int i = 0; i < BlockSize; i++)
-            {
-                for (int j = 0; j < BlockSize; j++)
-                {
-                    matrix[i + x, j + y].Y = tempMatrix[i, j].Y;
-                    matrix[i + x, j + y].Cb = tempMatrix[i, j].Cb;
-                    matrix[i + x, j + y].Cr = tempMatrix[i, j].Cr;
-                }
-            }
-        }
-
         private void calculateIDCTForBlock(YCrCb[,] matrix, int x, int y)
         {
             var tempMatrix = new YCrCb[BlockSize,BlockSize];
@@ -145,6 +132,20 @@ namespace StegoJpeg
                     matrix[i, j].Y += 128;
                     matrix[i, j].Cr += 128;
                     matrix[i, j].Cb += 128;
+                }
+            }
+        }
+
+
+        private void copyTempMatrixToRealMatrix(int x, int y, YCrCb[,] matrix, YCrCb[,] tempMatrix)
+        {
+            for (int i = 0; i < BlockSize; i++)
+            {
+                for (int j = 0; j < BlockSize; j++)
+                {
+                    matrix[i + x, j + y].Y = tempMatrix[i, j].Y;
+                    matrix[i + x, j + y].Cb = tempMatrix[i, j].Cb;
+                    matrix[i + x, j + y].Cr = tempMatrix[i, j].Cr;
                 }
             }
         }

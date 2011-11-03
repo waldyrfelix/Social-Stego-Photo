@@ -93,7 +93,7 @@ namespace StegoJpeg
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    matrix[i, j] = (qf * matrix50[i, j] + 50) / 100;
+                    matrix[i, j] = (int)Math.Round((qf * matrix50[i, j] + 50) / 100.0);
                 }
             }
             return matrix;
