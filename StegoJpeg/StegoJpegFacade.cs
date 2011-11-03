@@ -8,7 +8,8 @@ using StegoJpeg.Util;
 namespace StegoJpeg
 {
    public class StegoJpegFacade
-    {
+   {
+       private const int Qf=90;
        public void EmbedData(string path, string message)
        {
            using (var stream = new StreamReader(path))
@@ -23,12 +24,12 @@ namespace StegoJpeg
 
                Quantizer q = new Quantizer();
 
-               q.ApplyQuantization(matrix, 99);
+               q.ApplyQuantization(matrix, Qf);
 
                var stego = new Steganography();
                stego.HideMessage(matrix,message);
 
-               q.ApplyInverseQuantization(matrix, 99);
+               q.ApplyInverseQuantization(matrix, Qf);
 
                dct.CalculateIDCT(matrix);
 
@@ -51,7 +52,7 @@ namespace StegoJpeg
                var dct = new DCT();
                dct.CalculateDCT(matrix);
 
-               new Quantizer().ApplyQuantization(matrix, 99);
+               new Quantizer().ApplyQuantization(matrix, Qf);
 
                var stego = new Steganography();
                

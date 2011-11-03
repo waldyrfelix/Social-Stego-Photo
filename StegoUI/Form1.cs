@@ -33,8 +33,15 @@ namespace StegoUI
         {
             if (dialogOpenFile.CheckFileExists)
             {
-                txtMessage.Text = _stegoJpegFacade.ExtractData(dialogOpenFile.FileName);
-                MessageBox.Show("Concluido.");
+                try
+                {
+                    txtMessage.Text = _stegoJpegFacade.ExtractData(dialogOpenFile.FileName);
+                    MessageBox.Show("Concluido.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 
@@ -42,8 +49,15 @@ namespace StegoUI
         {
             if (!String.IsNullOrWhiteSpace(txtMessage.Text))
             {
-                _stegoJpegFacade.EmbedData(dialogOpenFile.FileName, txtMessage.Text);
-                MessageBox.Show("A stego image foi salva!");
+                try
+                {
+                    _stegoJpegFacade.EmbedData(dialogOpenFile.FileName, txtMessage.Text);
+                    MessageBox.Show("A stego image foi salva!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
     }

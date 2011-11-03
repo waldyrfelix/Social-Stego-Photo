@@ -10,8 +10,8 @@ namespace StegoJpegTests
     public class FinalTest
     {
         private const string basePath =
-            @"C:\Users\waldyr\Documents\Visual Studio 2010\Projects\SocialStegoPhoto\StegoJpegTests\";
-        const int qf = 80;
+            @"C:\Users\waldyr\Documents\Git\SocialStegoPhoto\StegoJpegTests\";
+        const int qf = 90;
 
         [TestCleanup]
         public void Cleanup()
