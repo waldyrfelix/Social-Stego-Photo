@@ -18,8 +18,8 @@ namespace StegoWeb.Controllers
 
         public ActionResult LoginRedirect()
         {
-            Session["usuario_logado"] = FacebookHelper.ObterUsuarioFacebook(Request.Url);
-
+            var userData = FacebookHelper.ObterUsuarioFacebook(Request.Url);
+            Session["usuario_logado"] = userData;
             return redirecionaUsuario();
         }
 

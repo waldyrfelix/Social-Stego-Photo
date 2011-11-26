@@ -8,16 +8,20 @@ using Facebook;
 
 namespace StegoWeb.Models
 {
-    public class UsuarioFacebook
+    public class FacebookUser
     {
-        public string PrimeiroNome { get; set; }
-        public string UltimoNome { get; set; }
+        public string Picture { get; set; }
         public long IdFacebook { get; set; }
         public string Email { get; set; }
         public string AccessToken { get; set; }
-        public string UrlFacebook { get; set; }
-        public string UrlImagemGrande { get; set; }
-        public string UrlImagemPequena { get; set; }
+        public string Link { get; set; }
+        public string Name { get; set; }
+        public string Username { get; set; }
+        public string Hometown { get; set; }
+        public string Location { get; set; }
+        public string Gender { get; set; }
+        public string IP { get; set; }
+        public DateTime UploadDate { get; set; }
     }
 
     public class FacebookHelper
@@ -58,13 +62,13 @@ namespace StegoWeb.Models
             var oauth = OAuthClient;
             var parametros = new Dictionary<string, object>
             {
-                {"scope", "email,user_about_me,user_photos,publish_stream"},
+                {"scope", "email,user_about_me"},
             };
 
             return oauth.GetLoginUrl(parametros).ToString();
         }
 
-        public static UsuarioFacebook ObterUsuarioFacebook(Uri url)
+        public static FacebookUser ObterUsuarioFacebook(Uri url)
         {
             FacebookOAuthResult oauthResult;
 
@@ -83,41 +87,21 @@ namespace StegoWeb.Models
 
             var fbClient = new FacebookClient(accessToken);
 
-            dynamic me = fbClient.Get("me?fields=id,first_name,last_name,email,link");
+            dynamic me = fbClient.Get("me?fields=?fields=id,name,email,link,username,hometown,location,gender");
 
-            return new UsuarioFacebook
+            return new FacebookUser
             {
                 IdFacebook = Convert.ToInt64(me.id),
                 AccessToken = accessToken,
-                PrimeiroNome = me.first_name,
-                UltimoNome = me.last_name,
                 Email = me.email,
-                UrlFacebook = me.link,
-                UrlImagemGrande = String.Format("http://graph.facebook.com/{0}/picture?type=large", me.id),
-                UrlImagemPequena = String.Format("http://graph.facebook.com/{0}/picture?type=small", me.id)
+                Name = me.name,
+                Picture = String.Format("http://graph.facebook.com/{0}/picture?type=small", me.id),
+                Link = me.link,
+                Username = me.username,
+                Hometown = me.hometown.name,
+                Location = me.location.name,
+                Gender = me.gender,
             };
-        }
-
-        public static void UploadPhoto(UsuarioFacebook usuarioFacebook, string path)
-        {
-            var mediaObject = new FacebookMediaObject
-                                  {
-                                      ContentType = "image/jpeg",
-                                      FileName = Path.GetFileName(path)
-                                  };
-
-            byte[] bytes = File.ReadAllBytes(path);
-
-            mediaObject.SetValue(bytes);
-
-            var fb = new FacebookClient(usuarioFacebook.AccessToken);
-            fb.PostCompleted += fb_PostCompleted;
-            fb.PostAsync("/me/photos", new Dictionary<string, object> { { "source", mediaObject } });
-        }
-
-        private static void fb_PostCompleted(object sender, FacebookApiEventArgs e)
-        {
-
         }
     }
 }

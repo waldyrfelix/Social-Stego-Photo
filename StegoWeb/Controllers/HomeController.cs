@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using StegoJpeg;
 using StegoWeb.Models;
 
@@ -13,68 +14,93 @@ namespace StegoWeb.Controllers
     {
         private StegoJpegFacade _stegoJpegFacade;
 
+        public FacebookUser FacebookUserLoggedUser
+        {
+            get
+            {
+                if (!IsAuthenticated)
+                {
+                    return null;
+                }
+                return Session["usuario_logado"] as FacebookUser;
+            }
+        }
+
+        public bool IsAuthenticated
+        {
+            get { return Session["usuario_logado"] != null; }
+        }
+
         public HomeController()
         {
             _stegoJpegFacade = new StegoJpegFacade();
 
         }
 
-        public UsuarioFacebook UsuarioFacebook
-        {
-            get
-            {
-                if (Session["usuario_logado"] == null)
-                {
-                    return null;
-                }
-                return Session["usuario_logado"] as UsuarioFacebook;
-            }
-        }
-
-
         public ActionResult Index()
         {
-            ViewBag.Message = "Welcome to ASP.NET MVC!";
+            string path = Server.MapPath("~/Arquivos");
 
-            return View();
+            var files = Directory.GetFiles(path, "*_stego.jpg")
+                .Select(f => "Arquivos/" + Path.GetFileName(f))
+                .ToList();
+
+            return View(files);
         }
 
         public ActionResult Upload()
         {
+            if (!IsAuthenticated) return View("Authenticate");
+
             return View();
         }
 
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase photo)
         {
-            string fileName = Guid.NewGuid().ToString("N");
-            string path = Path.Combine(Server.MapPath("~/Arquivos"), fileName + ".jpg");
-            string pathStego = Path.Combine(Server.MapPath("~/Arquivos"), fileName + "_stego.jpg");
+            if (!IsAuthenticated) return View("Authenticate");
+
+            string path = makeFilePath();
+
             photo.SaveAs(path);
 
-
-            _stegoJpegFacade.EmbedData(path, "Teste de carga...");
-
-
-            FacebookHelper.UploadPhoto(UsuarioFacebook, pathStego);
+            string dataToBeEmbeded = serializeData();
+            _stegoJpegFacade.EmbedData(path, dataToBeEmbeded);
 
             return RedirectToAction("UploadOk");
         }
 
+        private string serializeData()
+        {
+            var facebookUser = FacebookUserLoggedUser;
+            facebookUser.IP = Request.ServerVariables["REMOTE_ADDR"];
+            facebookUser.UploadDate = DateTime.Now;
+
+            return JsonConvert.SerializeObject(facebookUser);
+        }
 
         public ActionResult UploadOk()
         {
+            if (!IsAuthenticated) return View("Authenticate");
+
             return View();
         }
 
         [ChildActionOnly]
         public ActionResult UsuarioLogado()
         {
-            if (Session["usuario_logado"] == null)
+            if (IsAuthenticated)
             {
-                return PartialView("_LoginUsuario");
+                return PartialView("_UsuarioLogado");
             }
-            return PartialView("_UsuarioLogado");
+            return PartialView("_LoginUsuario");
         }
+
+        private string makeFilePath()
+        {
+            string fileName = Guid.NewGuid().ToString("N");
+            return Path.Combine(Server.MapPath("~/Arquivos"), fileName + ".jpg");
+        }
+
     }
 }
