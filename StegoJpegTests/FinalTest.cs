@@ -29,7 +29,7 @@ namespace StegoJpegTests
                 var imageIo = new JpegImageIO();
                 var bytesRGB = imageIo.ReadRGBFromImage(stream.BaseStream);
 
-                //TestHelper.PrintMatrix("Binary image", bytesRGB);
+                TestHelper.PrintMatrix("Binary image", bytesRGB);
                 //imageIo.WriteRGBToImage(Path.Combine(basePath, "original.jpg"), bytesRGB);
 
                 var matrix = YCrCb.Parse(bytesRGB);

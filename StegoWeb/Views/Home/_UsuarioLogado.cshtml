@@ -1,0 +1,7 @@
+﻿@{
+    var usuario = (StegoWeb.Models.UsuarioFacebook)Session["usuario_logado"];   
+}
+<div>
+    <img src="@usuario.UrlImagemPequena" align=left hspace=10 />
+    <p>@usuario.PrimeiroNome <br />@usuario.Email</p>
+</div>

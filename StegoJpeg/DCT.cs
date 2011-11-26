@@ -56,7 +56,7 @@ namespace StegoJpeg
                         }
                     }
 
-                    tempMatrix[k, l].Y = Math.Round(sumY, 2);
+                    tempMatrix[k, l].Y = Math.Round(sumY, 1);
                     tempMatrix[k, l].Cr = Math.Round(sumCr, 2);
                     tempMatrix[k, l].Cb = Math.Round(sumCb, 2);
                 }
