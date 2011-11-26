@@ -39,8 +39,6 @@ namespace StegoWeb.Controllers
             return View();
         }
 
-
-
         public ActionResult Upload()
         {
             return View();
