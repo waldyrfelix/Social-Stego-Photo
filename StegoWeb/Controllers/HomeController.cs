@@ -91,7 +91,7 @@ namespace StegoWeb.Controllers
         {
             if (IsAuthenticated)
             {
-                return PartialView("_UsuarioLogado");
+                return PartialView("_UsuarioLogado", FacebookUserLoggedUser);
             }
             return PartialView("_LoginUsuario");
         }

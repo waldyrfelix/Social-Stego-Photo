@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using StegoCore.Facebook;
+using StegoWeb.Infra;
 
 namespace StegoWeb
 {
@@ -32,6 +33,8 @@ namespace StegoWeb
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            DependencyResolver.SetResolver(new NinjectDependencyResolver());
 
             FacebookHelper.Initialize();
         }

@@ -1,7 +1,6 @@
-﻿@{
-    var usuario = (StegoWeb.Models.FacebookUser)Session["usuario_logado"];   
-}
+﻿@model StegoCore.Facebook.FacebookUser
 <div>
-    <img src="@usuario.Picture" align=left hspace=10 />
-    <p>@usuario.Username <br />@usuario.Email</p>
+    <img src="@Model.Picture" align="left" hspace="10" />
+    <p>@Model.Username
+    <br />@Model.Email</p>
 </div>
