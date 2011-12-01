@@ -81,10 +81,6 @@
       <Project>{286E8B1E-6246-4CD8-B749-60D69B68F5E6}</Project>
       <Name>StegoCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StegoJpeg\StegoJpeg.csproj">
-      <Project>{2B7CEAE6-D2F8-4F27-8B8B-CFEFB18D727D}</Project>
-      <Name>StegoJpeg</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

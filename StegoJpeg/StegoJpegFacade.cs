@@ -10,7 +10,7 @@ namespace StegoJpeg
    public class StegoJpegFacade
    {
        private const int Qf=90;
-       public void EmbedData(string path, string message)
+       public void EmbedData(string path, byte[] message)
        {
            using (var stream = new StreamReader(path))
            {
@@ -27,7 +27,7 @@ namespace StegoJpeg
                q.ApplyQuantization(matrix, Qf);
 
                var stego = new Steganography();
-               stego.HideMessage(matrix,message);
+               stego.HideMessage(matrix, message);
 
                q.ApplyInverseQuantization(matrix, Qf);
 
@@ -40,7 +40,7 @@ namespace StegoJpeg
            }
        }
 
-       public string ExtractData(string path)
+       public byte[] ExtractData(string path)
        {
            using (var stream = new StreamReader(path))
            {

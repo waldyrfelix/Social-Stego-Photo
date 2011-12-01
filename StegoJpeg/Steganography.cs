@@ -42,7 +42,7 @@ namespace StegoJpeg
             return count;
         }
 
-        public string ExtractMessage(YCrCb[,] matrix)
+        public byte[] ExtractMessage(YCrCb[,] matrix)
         {
             var path = Permutation(matrix);
             var pathIndex = 0;
@@ -64,10 +64,10 @@ namespace StegoJpeg
             var bytesFromDataField = new byte[(int)Math.Ceiling(sizeField / 8.0)];
             bitsFromDataField.CopyTo(bytesFromDataField, 0);
 
-            return Encoding.ASCII.GetString(bytesFromDataField);
+            return bytesFromDataField;
         }
 
-        public void HideMessage(YCrCb[,] matrix, string message)
+        public void HideMessage(YCrCb[,] matrix, byte[] message)
         {
             if (bitsPerNonZeroDCTCoefficient(matrix) - 32 < message.Length * 8)
                 throw new ArgumentException("Message too long to be embedded.");
@@ -81,7 +81,7 @@ namespace StegoJpeg
                 i++;
             }
 
-            var bitsFromDataField = new BitArray(Encoding.ASCII.GetBytes(message));
+            var bitsFromDataField = new BitArray(message);
             i = 32;
             foreach (var bit in bitsFromDataField)
             {

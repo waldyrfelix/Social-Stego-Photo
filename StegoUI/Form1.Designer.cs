@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.btnExtract = new System.Windows.Forms.Button();
-            this.btnEmbed = new System.Windows.Forms.Button();
             this.picImage = new System.Windows.Forms.PictureBox();
             this.txtMessage = new System.Windows.Forms.TextBox();
             this.dialogOpenFile = new System.Windows.Forms.OpenFileDialog();
@@ -38,23 +37,13 @@
             // 
             // btnExtract
             // 
-            this.btnExtract.Location = new System.Drawing.Point(271, 444);
+            this.btnExtract.Location = new System.Drawing.Point(617, 444);
             this.btnExtract.Name = "btnExtract";
             this.btnExtract.Size = new System.Drawing.Size(163, 39);
             this.btnExtract.TabIndex = 0;
             this.btnExtract.Text = "Extrair dados";
             this.btnExtract.UseVisualStyleBackColor = true;
             this.btnExtract.Click += new System.EventHandler(this.btnExtract_Click);
-            // 
-            // btnEmbed
-            // 
-            this.btnEmbed.Location = new System.Drawing.Point(604, 444);
-            this.btnEmbed.Name = "btnEmbed";
-            this.btnEmbed.Size = new System.Drawing.Size(176, 39);
-            this.btnEmbed.TabIndex = 1;
-            this.btnEmbed.Text = "Embutir dados";
-            this.btnEmbed.UseVisualStyleBackColor = true;
-            this.btnEmbed.Click += new System.EventHandler(this.btnEmbed_Click);
             // 
             // picImage
             // 
@@ -87,7 +76,6 @@
             this.ClientSize = new System.Drawing.Size(792, 495);
             this.Controls.Add(this.txtMessage);
             this.Controls.Add(this.picImage);
-            this.Controls.Add(this.btnEmbed);
             this.Controls.Add(this.btnExtract);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -100,7 +88,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnExtract;
-        private System.Windows.Forms.Button btnEmbed;
         private System.Windows.Forms.PictureBox picImage;
         private System.Windows.Forms.TextBox txtMessage;
         private System.Windows.Forms.OpenFileDialog dialogOpenFile;

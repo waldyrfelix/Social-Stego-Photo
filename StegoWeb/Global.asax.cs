@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using StegoCore.Facebook;
-using StegoWeb.Infra;
+using StegoCore.Infra;
 
 namespace StegoWeb
 {
