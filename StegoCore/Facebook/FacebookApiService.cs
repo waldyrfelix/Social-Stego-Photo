@@ -1,33 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using System.Text;
 using System.Web;
 using Facebook;
 
-namespace StegoWeb.Models
+namespace StegoCore.Facebook
 {
-    public class FacebookUser
+    public class FacebookApiService : IFacebookApiService
     {
-        public string Picture { get; set; }
-        public long IdFacebook { get; set; }
-        public string Email { get; set; }
-        public string AccessToken { get; set; }
-        public string Link { get; set; }
-        public string Name { get; set; }
-        public string Username { get; set; }
-        public string Hometown { get; set; }
-        public string Location { get; set; }
-        public string Gender { get; set; }
-        public string IP { get; set; }
-        public DateTime UploadDate { get; set; }
-    }
-
-    public class FacebookHelper
-    {
-        public const string FacebookUrlReferrer = "FacebookUrlReferrer";
-
         private static Uri redirectUri;
         public static Uri MontarUrlDeRetorno()
         {
@@ -40,8 +19,7 @@ namespace StegoWeb.Models
             return redirectUri;
         }
 
-
-        protected static FacebookOAuthClient OAuthClient
+        protected FacebookOAuthClient OAuthClient
         {
             get
             {
@@ -52,12 +30,7 @@ namespace StegoWeb.Models
             }
         }
 
-        public static void Initialize()
-        {
-            FacebookApplication.SetApplication(new SocialStegoFacebookApp());
-        }
-
-        public static string Login()
+        public string Login()
         {
             var oauth = OAuthClient;
             var parametros = new Dictionary<string, object>
@@ -68,7 +41,7 @@ namespace StegoWeb.Models
             return oauth.GetLoginUrl(parametros).ToString();
         }
 
-        public static FacebookUser ObterUsuarioFacebook(Uri url)
+        public FacebookUser ObterUsuarioFacebook(Uri url)
         {
             FacebookOAuthResult oauthResult;
 

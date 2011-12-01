@@ -39,6 +39,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,7 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISteganographyService.cs" />
+    <Compile Include="Stego\SteganographyService.cs" />
+    <Compile Include="Facebook\FacebookApiService.cs" />
+    <Compile Include="Facebook\FacebookHelper.cs" />
+    <Compile Include="Facebook\FacebookUser.cs" />
+    <Compile Include="IFacebookApiService.cs" />
+    <Compile Include="Facebook\SocialStegoWebException.cs" />
+    <Compile Include="ISerializationService.cs" />
+    <Compile Include="Json\JsonSerializationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Facebook\SocialStegoFacebookApp.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StegoJpeg\StegoJpeg.csproj">

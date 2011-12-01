@@ -1,18 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Newtonsoft.Json;
-using StegoJpeg;
-using StegoWeb.Models;
+using StegoCore;
+using StegoCore.Facebook;
 
 namespace StegoWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private StegoJpegFacade _stegoJpegFacade;
+        private readonly ISteganographyService _steganographyService;
+        private readonly ISerializationService _serializationService;
+
+        public HomeController(ISteganographyService steganographyService, ISerializationService serializationService)
+        {
+            _steganographyService = steganographyService;
+            _serializationService = serializationService;
+        }
 
         public FacebookUser FacebookUserLoggedUser
         {
@@ -31,11 +36,6 @@ namespace StegoWeb.Controllers
             get { return Session["usuario_logado"] != null; }
         }
 
-        public HomeController()
-        {
-            _stegoJpegFacade = new StegoJpegFacade();
-
-        }
 
         public ActionResult Index()
         {
@@ -65,7 +65,7 @@ namespace StegoWeb.Controllers
             photo.SaveAs(path);
 
             string dataToBeEmbeded = serializeData();
-            _stegoJpegFacade.EmbedData(path, dataToBeEmbeded);
+            _steganographyService.Embed(path, dataToBeEmbeded);
 
             return RedirectToAction("UploadOk");
         }
@@ -76,7 +76,7 @@ namespace StegoWeb.Controllers
             facebookUser.IP = Request.ServerVariables["REMOTE_ADDR"];
             facebookUser.UploadDate = DateTime.Now;
 
-            return JsonConvert.SerializeObject(facebookUser);
+            return _serializationService.Serialize(facebookUser);
         }
 
         public ActionResult UploadOk()
@@ -101,6 +101,5 @@ namespace StegoWeb.Controllers
             string fileName = Guid.NewGuid().ToString("N");
             return Path.Combine(Server.MapPath("~/Arquivos"), fileName + ".jpg");
         }
-
     }
 }

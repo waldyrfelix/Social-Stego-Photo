@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Facebook;
 
-namespace StegoWeb.Models
+namespace StegoCore.Facebook
 {
     public class SocialStegoFacebookApp : IFacebookApplication
     {

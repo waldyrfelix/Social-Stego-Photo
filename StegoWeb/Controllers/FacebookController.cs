@@ -1,19 +1,26 @@
 ﻿using System.Web.Mvc;
-using StegoWeb.Models;
+using StegoCore;
 
 namespace StegoWeb.Controllers
 {
     public class FacebookController : Controller
     {
+        private readonly IFacebookApiService _apiService;
+
+        public FacebookController(IFacebookApiService apiService)
+        {
+            _apiService = apiService;
+        }
+
         public ActionResult Login()
         {
-            var facebookUrl = FacebookHelper.Login();
+            var facebookUrl = _apiService.Login();
             return Redirect(facebookUrl);
         }
 
         public ActionResult LoginRedirect()
         {
-            var userData = FacebookHelper.ObterUsuarioFacebook(Request.Url);
+            var userData = _apiService.ObterUsuarioFacebook(Request.Url);
             Session["usuario_logado"] = userData;
             return redirecionaUsuario();
         }

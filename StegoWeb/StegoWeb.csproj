@@ -34,13 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Facebook">
-      <HintPath>..\packages\Facebook.5.3.2.0\lib\net40-client\Facebook.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -70,9 +64,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\FacebookHelper.cs" />
-    <Compile Include="Models\SocialStegoFacebookApp.cs" />
-    <Compile Include="Models\SocialStegoWebException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -188,13 +179,10 @@
       <Project>{286E8B1E-6246-4CD8-B749-60D69B68F5E6}</Project>
       <Name>StegoCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StegoJpeg\StegoJpeg.csproj">
-      <Project>{2B7CEAE6-D2F8-4F27-8B8B-CFEFB18D727D}</Project>
-      <Name>StegoJpeg</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Arquivos\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\Authenticate.cshtml" />
