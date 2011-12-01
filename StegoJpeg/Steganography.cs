@@ -9,62 +9,6 @@ namespace StegoJpeg
 {
     public class Steganography
     {
-
-        //public List<Point> Permutation(int[,] matrix, int count)
-        //{
-        //    int width = matrix.GetLength(0);
-        //    int height = matrix.GetLength(1);
-
-        //    var points = new List<Point>();
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        var point = new Point(random.Next(width), random.Next(height));
-        //        if (points.Contains(point) || matrix[point.X, point.Y] == 0)
-        //        {
-        //            i--;
-        //        }
-        //        else
-        //        {
-        //            points.Add(point);
-        //        }
-        //    }
-        //    return points;
-        //}
-
-        //public List<Point> Permutation(double[,] matrix, int count)
-        //{
-        //    int xy = 0;
-        //    var points = new List<Point>();
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        points.Add(new Point(xy, xy));
-        //        xy += 8;
-        //    }
-        //    return points;
-        //}
-
-        //public List<Point> Permutation(double[,] matrix, int count)
-        //{
-        //    int width = matrix.GetLength(0);
-        //    int height = matrix.GetLength(1);
-        //    var random = new Random(615718);
-
-        //    var points = new List<Point>();
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        var point = new Point(random.Next(width), random.Next(height));
-        //        if (points.Contains(point) || matrix[point.X, point.Y] == 0 || Math.Abs(matrix[point.X, point.Y]) == 1.0)
-        //        {
-        //            i--;
-        //        }
-        //        else
-        //        {
-        //            points.Add(point);
-        //        }
-        //    }
-        //    return points;
-        //} 
-
         public List<Point> Permutation(YCrCb[,] matrix)
         {
             var points = new List<Point>();
