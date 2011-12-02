@@ -32,6 +32,7 @@
             this.picImage = new System.Windows.Forms.PictureBox();
             this.txtMessage = new System.Windows.Forms.TextBox();
             this.dialogOpenFile = new System.Windows.Forms.OpenFileDialog();
+            this.pnlContainer = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,18 +63,27 @@
             this.txtMessage.Location = new System.Drawing.Point(440, 12);
             this.txtMessage.Multiline = true;
             this.txtMessage.Name = "txtMessage";
-            this.txtMessage.Size = new System.Drawing.Size(340, 426);
+            this.txtMessage.Size = new System.Drawing.Size(340, 98);
             this.txtMessage.TabIndex = 3;
             // 
             // dialogOpenFile
             // 
             this.dialogOpenFile.Filter = "JPEG|*.jpg";
             // 
+            // pnlContainer
+            // 
+            this.pnlContainer.AutoScroll = true;
+            this.pnlContainer.Location = new System.Drawing.Point(440, 116);
+            this.pnlContainer.Name = "pnlContainer";
+            this.pnlContainer.Size = new System.Drawing.Size(340, 322);
+            this.pnlContainer.TabIndex = 4;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(792, 495);
+            this.Controls.Add(this.pnlContainer);
             this.Controls.Add(this.txtMessage);
             this.Controls.Add(this.picImage);
             this.Controls.Add(this.btnExtract);
@@ -91,6 +101,7 @@
         private System.Windows.Forms.PictureBox picImage;
         private System.Windows.Forms.TextBox txtMessage;
         private System.Windows.Forms.OpenFileDialog dialogOpenFile;
+        private System.Windows.Forms.Panel pnlContainer;
     }
 }
 

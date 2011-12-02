@@ -12,7 +12,7 @@ namespace StegoCore.Infra
     {
         private static readonly IKernel _kernel;
 
-        static IoC()
+         static IoC()
         {
             _kernel = new StandardKernel();
             _kernel.Bind<IFacebookApiService>().To<FacebookApiService>();
